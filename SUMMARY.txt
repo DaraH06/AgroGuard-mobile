@@ -1,0 +1,339 @@
+================================================================
+  SUMMARY SESI PENGEMBANGAN - AgroGuard Mobile
+  Tanggal : 03 April 2026
+  Tools   : Flutter 3.41.6 | Dart | Visual Studio Community 2026
+================================================================
+
+
+----------------------------------------------------------------
+BAGIAN 1 — SETUP & KONFIGURASI ENVIRONMENT
+----------------------------------------------------------------
+
+MASALAH 1: Flutter tidak bisa berjalan di Windows Desktop
+----------------------------------------------------------
+Penyebab   : Visual Studio belum terinstal
+Error      : "Unable to find suitable Visual Studio toolchain"
+Solusi     : Download & install Visual Studio Community (gratis)
+             dari https://visualstudio.microsoft.com/downloads/
+             Saat instalasi, WAJIB centang workload:
+             => "Desktop development with C++"
+
+MASALAH 2: Komponen Visual Studio kurang setelah instalasi
+----------------------------------------------------------
+Penyebab   : Saat install, workload "Desktop development with C++"
+             tidak dipilih
+Error      : flutter doctor menampilkan [X] Visual Studio
+             "Visual Studio is missing necessary components"
+Komponen yang harus ditambah:
+  - MSVC v142 - VS 2019 C++ x64/x86 build tools (versi terbaru)
+  - C++ CMake tools for Windows
+  - Windows 10 SDK (atau Windows 11 SDK)
+Solusi     : Buka Visual Studio Installer -> klik "Modify" ->
+             centang workload yang diperlukan -> klik "Modify"
+
+MASALAH 3: Android licenses belum disetujui
+----------------------------------------------------------
+Error      : "[!] Android toolchain - Some Android licenses not accepted"
+Solusi     : Jalankan perintah berikut di terminal:
+             flutter doctor --android-licenses
+             Tekan 'y' + Enter untuk menyetujui setiap lisensi.
+
+MASALAH 4: Chrome tidak ditemukan (menggunakan Opera)
+----------------------------------------------------------
+Error      : "[X] Chrome - Cannot find Chrome executable"
+Keputusan  : DIABAIKAN — tidak mempengaruhi development.
+             Flutter dapat menggunakan Microsoft Edge sebagai
+             pengganti browser untuk menjalankan aplikasi Web.
+             Jika ingin menggunakan Opera, tambahkan environment
+             variable: CHROME_EXECUTABLE = <path ke opera.exe>
+
+Hasil akhir flutter doctor:
+  [√] Flutter
+  [√] Windows Version
+  [√] Android toolchain
+  [X] Chrome (diabaikan)
+  [√] Visual Studio - develop Windows apps
+  [√] Connected device
+  [√] Network resources
+
+
+----------------------------------------------------------------
+BAGIAN 2 — STRUKTUR FILE PROJECT (SETELAH SESI INI)
+----------------------------------------------------------------
+
+lib/
+├── main.dart                         <- Entry point aplikasi
+├── home_screen.dart                  <- Halaman 1: Upload Foto
+├── kondisi_screen.dart               <- Halaman 2: Kondisi Sekitar
+├── photo_preview_screen.dart         <- Halaman 3: Preview Foto
+├── result_screen.dart                <- Halaman 4: Hasil Analisa
+│
+└── widgets/                          <- Folder custom widgets reusable
+    ├── agroguard_header.dart         <- Header AgroGuard (semua halaman)
+    ├── scan_toggle.dart              <- Tombol Scan/Kondisi sekitar
+    ├── agro_info_banner.dart         <- Banner info bawah
+    └── dashed_border_painter.dart    <- Painter garis putus-putus
+
+
+----------------------------------------------------------------
+BAGIAN 3 — DETAIL SETIAP FILE YANG DIBUAT/DIMODIFIKASI
+----------------------------------------------------------------
+
+[1] lib/main.dart (DIMODIFIKASI)
+---------------------------------
+Perubahan  : Diubah dari "Hello World" menjadi entry point
+             yang memanggil HomeScreen.
+Isi penting:
+  - MaterialApp dengan title 'AgroGuard'
+  - debugShowCheckedModeBanner: false (hilangkan banner debug)
+  - home: HomeScreen()
+
+[2] lib/home_screen.dart (DIBUAT BARU)
+----------------------------------------
+Fungsi     : Halaman pertama — user mengupload foto tanaman
+Komponen UI:
+  - AgroGuardHeader (widget kustom)
+  - ScanToggle (widget kustom)
+  - Area upload bergaris putus-putus (dashed border)
+  - Ikon kamera di dalam lingkaran hijau muda
+  - Teks "Upload Foto Tanaman" dan deskripsi
+  - Tombol "Pilih Foto" (ElevatedButton dengan ikon upload)
+  - AgroInfoBanner (widget kustom) di bawah
+Navigasi   :
+  - Tombol "Kondisi sekitar" -> KondisiScreen
+  - Tombol "Pilih Foto"      -> PhotoPreviewScreen
+Warna utama: #136B53 (hijau tua), #F4FBF5 (hijau muda background)
+Dashed Border: Dibuat menggunakan CustomPainter (_DashedBorder)
+               yang menggunakan path.computeMetrics() untuk
+               menggambar garis putus-putus.
+
+[3] lib/kondisi_screen.dart (DIBUAT BARU)
+------------------------------------------
+Fungsi     : Halaman kedua — menampilkan daftar berita penyakit
+             dan hama di sekitar wilayah pengguna
+Komponen UI:
+  - AgroGuardHeader (widget kustom)
+  - ScanToggle (widget kustom) — tab "Kondisi sekitar" aktif
+  - Banner "Pemberitahuan Penyakit & Hama" dengan ikon trending
+  - ListView daftar berita (5 item dummy)
+  - Setiap card berita berisi:
+      * Foto tanaman (dummy: ikon grass)
+      * Judul berita
+      * Ikon + Lokasi (kota, provinsi)
+      * Ikon + Nama hama
+      * Ikon + Jumlah kasus
+      * Ikon + Tanggal kejadian
+Navigasi   :
+  - Tombol "Scan" di ScanToggle -> Navigator.pop() kembali ke Home
+
+[4] lib/photo_preview_screen.dart (DIBUAT BARU)
+-------------------------------------------------
+Fungsi     : Halaman ketiga — preview foto yang akan dianalisa
+Komponen UI:
+  - AgroGuardHeader (widget kustom)
+  - ScanToggle (widget kustom)
+  - Area foto besar (dummy: gradient hijau + ikon daun)
+    dengan ClipRRect radius 20
+  - Dua tombol berdampingan:
+      * "Foto Ulang" (OutlinedButton, border hijau) -> kembali
+      * "Analisa Foto" (ElevatedButton, hijau) -> ResultScreen
+  - AgroInfoBanner (widget kustom) di bawah
+Navigasi   :
+  - Tombol "Foto Ulang"  -> Navigator.pop()
+  - Tombol "Analisa Foto" -> ResultScreen
+
+[5] lib/result_screen.dart (DIBUAT BARU)
+-----------------------------------------
+Fungsi     : Halaman keempat — menampilkan hasil deteksi AI
+Komponen UI:
+  - AgroGuardHeader (widget kustom)
+  - ScanToggle (widget kustom)
+  - Area foto hasil scan (dummy: gradient hijau)
+  - Card hasil deteksi berisi:
+      * Ikon emoji 🦠 dalam kotak oranye
+      * Nama penyakit: "Hawar Daun bakteri"
+      * Label "Akurasi Deteksi"
+      * Angka akurasi besar: "94%"
+      * Kotak pesan hijau muda: "Penyakit terdeteksi pada tanaman..."
+  - Dua tombol berdampingan:
+      * "Scan lagi" (OutlinedButton) -> kembali ke HomeScreen
+      * "Lihat Solusi" (ElevatedButton) -> (belum diimplementasi)
+Navigasi   :
+  - Tombol "Scan lagi" -> Navigator.popUntil(isFirst)
+
+
+----------------------------------------------------------------
+BAGIAN 4 — CUSTOM WIDGETS REUSABLE (lib/widgets/)
+----------------------------------------------------------------
+
+ALASAN PEMBUATAN CUSTOM WIDGETS:
+Dari keempat halaman Figma, ditemukan beberapa widget yang
+IDENTIK di setiap halaman. Daripada menulis kode yang sama
+berulang-ulang (duplikasi kode), widget tersebut dipisahkan
+menjadi file tersendiri sehingga cukup dipanggil sekali.
+Prinsip ini disebut DRY (Don't Repeat Yourself).
+
+Widget yang diidentifikasi sebagai reusable:
+  1. Header AgroGuard      -> muncul di 4/4 halaman
+  2. Tombol Tab Scan       -> muncul di 4/4 halaman
+  3. Banner Info bawah     -> muncul di 2/4 halaman
+  4. Dashed Border Painter -> digunakan di home_screen
+
+---
+
+[W1] lib/widgets/agroguard_header.dart
+----------------------------------------
+Kelas      : AgroGuardHeader extends StatelessWidget
+Fungsi     : Header bagian atas aplikasi dengan background
+             hijau tua, sudut bawah melengkung (radius 24).
+Parameter  : Tidak ada (tampilan selalu sama)
+Isi:
+  - Logo placeholder: ikon energy_savings_leaf dalam kotak putih
+    (bisa diganti dengan Image.asset() saat logo asli siap)
+  - Teks "AgroGuard" (bold, putih, 20px)
+  - Teks subtitle (putih 90% opacity, 12px, 2 baris)
+Dipakai di : home_screen, kondisi_screen,
+             photo_preview_screen, result_screen
+
+---
+
+[W2] lib/widgets/scan_toggle.dart
+------------------------------------
+Kelas      : ScanToggle extends StatelessWidget
+Fungsi     : Tombol toggle/tab antara mode "Scan" dan
+             "Kondisi sekitar"
+Parameter  :
+  - isScanActive (bool)  : menentukan tab mana yang aktif
+  - onToggle (Function)  : callback saat tab ditekan
+Cara kerja :
+  - Tab yang aktif: background hijau tua, teks putih
+  - Tab tidak aktif: background transparan, teks abu-abu
+  - Menggunakan GestureDetector untuk mendeteksi tap
+Dipakai di : home_screen, kondisi_screen,
+             photo_preview_screen, result_screen
+
+---
+
+[W3] lib/widgets/agro_info_banner.dart
+----------------------------------------
+Kelas      : AgroInfoBanner extends StatelessWidget
+Fungsi     : Banner informasi di bagian bawah halaman yang
+             menjelaskan fungsi AgroGuard menggunakan RichText
+             agar kata "AgroGuard" bisa dibold dan berwarna.
+Parameter  : Tidak ada (konten selalu sama)
+Styling    :
+  - Container putih, border hijau tipis, radius 16
+  - Teks "AgroGuard" bold + hijau
+  - Teks deskripsi biasa + hitam
+Dipakai di : home_screen, photo_preview_screen
+
+---
+
+[W4] lib/widgets/dashed_border_painter.dart
+---------------------------------------------
+Kelas      : DashedBorderPainter extends CustomPainter
+Fungsi     : Menggambar border bergaris putus-putus di
+             sekeliling widget menggunakan Canvas API Flutter.
+Parameter  :
+  - color       : warna garis (required)
+  - strokeWidth : ketebalan garis (default: 1.5)
+  - dashLength  : panjang satu garis (default: 8)
+  - gapLength   : panjang satu jarak (default: 6)
+  - borderRadius: sudut melengkung (default: 20)
+Cara kerja :
+  - Membuat Path berbentuk RRect (rounded rectangle)
+  - Menggunakan path.computeMetrics() untuk mengiterasi
+    setiap titik di sepanjang path
+  - Secara bergantian menggambar (draw) dan melewati (gap)
+    segmen-segmen kecil untuk efek garis putus-putus
+Catatan    : Widget ini sudah dibuat tapi pada home_screen.dart
+             digunakan versi inline _DashedBorder untuk
+             kemudahan. File ini tersedia untuk digunakan
+             di halaman lain jika diperlukan.
+
+
+----------------------------------------------------------------
+BAGIAN 5 — ALUR NAVIGASI LENGKAP
+----------------------------------------------------------------
+
+HomeScreen (Tab: Scan aktif)
+  │
+  ├── [Toggle "Kondisi sekitar"] 
+  │     └─► KondisiScreen (Tab: Kondisi aktif)
+  │               └── [Toggle "Scan"] ─► kembali ke HomeScreen
+  │
+  └── [Tombol "Pilih Foto"]
+        └─► PhotoPreviewScreen
+                  │
+                  ├── [Tombol "Foto Ulang"] ─► kembali ke HomeScreen
+                  │
+                  └── [Tombol "Analisa Foto"]
+                        └─► ResultScreen
+                                  │
+                                  └── [Tombol "Scan lagi"]
+                                        └─► kembali ke HomeScreen
+
+
+----------------------------------------------------------------
+BAGIAN 6 — PALET WARNA YANG DIGUNAKAN
+----------------------------------------------------------------
+
+#136B53  -> Primary Green    (header, tombol, teks judul)
+#F4FBF5  -> Background       (latar semua halaman)
+#CBEAD7  -> Icon Background  (lingkaran ikon kamera di home)
+#D4EAE1  -> Banner Background (banner kondisi sekitar)
+#EAF5EE  -> Result Card Background (kotak info hasil deteksi)
+
+
+----------------------------------------------------------------
+BAGIAN 7 — HASIL FLUTTER ANALYZE (FINAL)
+----------------------------------------------------------------
+
+Perintah  : flutter analyze lib/
+Hasil     : No issues found! (ran in 3.0s)
+
+Perbaikan yang dilakukan selama proses:
+  - Ganti .withOpacity() (deprecated) -> .withValues(alpha: x)
+    di: home_screen, kondisi_screen, result_screen,
+        agro_info_banner, agroguard_header
+  - Ganti Container kosong -> SizedBox (sized_box_for_whitespace)
+    di: result_screen
+  - Perbaiki "unnecessary_underscores" __ -> _
+    di: kondisi_screen (separatorBuilder)
+  - Perbaiki lint PathMetric/PathMetrics dengan menggunakan
+    for-in loop langsung pada path.computeMetrics()
+
+
+----------------------------------------------------------------
+BAGIAN 8 — CATATAN & TODO SELANJUTNYA
+----------------------------------------------------------------
+
+1. ASET GAMBAR
+   - Semua foto tanaman masih menggunakan dummy (warna gradient
+     hijau + ikon daun). Ganti dengan Image.asset() atau
+     Image.network() saat aset asli siap.
+   - Logo aplikasi di header masih menggunakan ikon bawaan
+     Flutter. Ganti dengan: Image.asset('assets/logo.png')
+
+2. OVERFLOW DI WINDOWS
+   - Saat dijalankan di Windows Desktop, ada overflow karena
+     desain dibuat untuk ukuran layar mobile.
+   - Ini NORMAL — jalankan di emulator Android atau HP asli
+     untuk hasil yang sesuai desain Figma.
+
+3. FUNGSIONALITAS YANG BELUM DIIMPLEMENTASI
+   - Tombol "Pilih Foto" belum terhubung ke image picker
+     (perlu tambah package: image_picker)
+   - Tombol "Lihat Solusi" di ResultScreen belum ada halaman
+     tujuannya
+   - Tombol "Kondisi sekitar" di halaman selain HomeScreen
+     belum navigasi ke KondisiScreen
+
+4. PACKAGE YANG MUNGKIN DIBUTUHKAN BERIKUTNYA
+   - image_picker    : untuk ambil/upload foto dari galeri/kamera
+   - http atau dio   : untuk komunikasi dengan API backend AI
+   - provider/riverpod: untuk state management jika aplikasi makin kompleks
+
+================================================================
+  END OF SUMMARY
+================================================================
