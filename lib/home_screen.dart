@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'widgets/agroguard_header.dart';
-import 'widgets/scan_toggle.dart';
+import 'widgets/animated_bottom_toggle.dart';
 import 'widgets/agro_info_banner.dart';
 import 'kondisi_screen.dart';
 import 'photo_preview_screen.dart';
@@ -20,12 +20,16 @@ class _HomeScreenState extends State<HomeScreen> {
   static const Color iconBgLightGreen = Color(0xFFCBEAD7);
 
   void _onToggle(bool scanActive) {
-    setState(() => isScanActive = scanActive);
     if (!scanActive) {
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (_) => const KondisiScreen()),
-      ).then((_) => setState(() => isScanActive = true));
+        PageRouteBuilder(
+          pageBuilder: (context, animation1, animation2) =>
+              const KondisiScreen(),
+          transitionDuration: Duration.zero,
+          reverseTransitionDuration: Duration.zero,
+        ),
+      );
     }
   }
 
@@ -33,16 +37,19 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: bgLightGreen,
+      // Toggle dipasang di bottomNavigationBar agar selalu di bawah
+      bottomNavigationBar: AnimatedBottomToggle(
+        isScanActive: isScanActive,
+        onToggle: _onToggle,
+      ),
       body: Column(
         children: [
           const AgroGuardHeader(),
           const SizedBox(height: 24),
-          ScanToggle(isScanActive: isScanActive, onToggle: _onToggle),
-          const SizedBox(height: 32),
           Expanded(child: _buildUploadSection()),
           const SizedBox(height: 24),
           const AgroInfoBanner(),
-          const SizedBox(height: 32),
+          const SizedBox(height: 24),
         ],
       ),
     );
@@ -99,7 +106,8 @@ class _HomeScreenState extends State<HomeScreen> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (_) => const PhotoPreviewScreen()),
+                      builder: (_) => const PhotoPreviewScreen(),
+                    ),
                   );
                 },
                 icon: const Icon(Icons.upload_outlined, color: Colors.white),
@@ -110,7 +118,9 @@ class _HomeScreenState extends State<HomeScreen> {
                 style: ElevatedButton.styleFrom(
                   backgroundColor: primaryGreen,
                   padding: const EdgeInsets.symmetric(
-                      horizontal: 32, vertical: 14),
+                    horizontal: 32,
+                    vertical: 14,
+                  ),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12),
                   ),
@@ -125,7 +135,6 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 }
 
-/// Custom Painter untuk garis putus-putus (dashed border)
 class _DashedBorder extends CustomPainter {
   static const Color primaryGreen = Color(0xFF136B53);
 
@@ -138,10 +147,12 @@ class _DashedBorder extends CustomPainter {
       ..strokeCap = StrokeCap.round;
 
     final path = Path()
-      ..addRRect(RRect.fromRectAndRadius(
-        Rect.fromLTWH(0, 0, size.width, size.height),
-        const Radius.circular(20),
-      ));
+      ..addRRect(
+        RRect.fromRectAndRadius(
+          Rect.fromLTWH(0, 0, size.width, size.height),
+          const Radius.circular(20),
+        ),
+      );
 
     for (final metric in path.computeMetrics()) {
       double d = 0;

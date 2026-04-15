@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'widgets/agroguard_header.dart';
-import 'widgets/scan_toggle.dart';
+import 'widgets/animated_bottom_toggle.dart';
 import 'widgets/agro_info_banner.dart';
 import 'result_screen.dart';
 
@@ -25,11 +25,13 @@ class _PhotoPreviewScreenState extends State<PhotoPreviewScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: bgLightGreen,
+      bottomNavigationBar: AnimatedBottomToggle(
+        isScanActive: isScanActive,
+        onToggle: _onToggle,
+      ),
       body: Column(
         children: [
           const AgroGuardHeader(),
-          const SizedBox(height: 24),
-          ScanToggle(isScanActive: isScanActive, onToggle: _onToggle),
           const SizedBox(height: 24),
           _buildPhotoArea(),
           const SizedBox(height: 24),
@@ -53,7 +55,6 @@ class _PhotoPreviewScreenState extends State<PhotoPreviewScreen> {
           color: Colors.green.shade300,
           child: Stack(
             children: [
-              // Dummy background foto tanaman
               Container(
                 decoration: BoxDecoration(
                   gradient: LinearGradient(
