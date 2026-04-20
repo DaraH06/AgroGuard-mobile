@@ -17,12 +17,9 @@ class AnimatedBottomToggle extends StatefulWidget {
 class _AnimatedBottomToggleState extends State<AnimatedBottomToggle>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
-  late Animation<double> _slideAnimation;
-  late Animation<double> _fadeAnimation;
   late Animation<double> _scaleAnimation;
 
   static const Color primaryGreen = Color(0xFF136B53);
-  static const Color bgLightGreen = Color(0xFFF4FBF5);
   static const Color iconBgLightGreen = Color(0xFFCBEAD7);
 
   @override
@@ -31,14 +28,6 @@ class _AnimatedBottomToggleState extends State<AnimatedBottomToggle>
     _controller = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 350),
-    );
-
-    _slideAnimation = Tween<double>(begin: 0, end: 1).animate(
-      CurvedAnimation(parent: _controller, curve: Curves.easeInOutCubic),
-    );
-
-    _fadeAnimation = Tween<double>(begin: 0.6, end: 1).animate(
-      CurvedAnimation(parent: _controller, curve: Curves.easeIn),
     );
 
     _scaleAnimation = Tween<double>(begin: 0.95, end: 1).animate(
