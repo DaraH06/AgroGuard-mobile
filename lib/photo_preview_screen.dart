@@ -3,10 +3,13 @@ import 'widgets/agroguard_header.dart';
 import 'widgets/animated_bottom_toggle.dart';
 import 'widgets/agro_info_banner.dart';
 import 'result_screen.dart';
+import 'dart:io';
 
 class PhotoPreviewScreen extends StatefulWidget {
-  const PhotoPreviewScreen({super.key});
-
+  final String? imagePath;
+  final double? lat; 
+  final double? long; 
+  const PhotoPreviewScreen({super.key, this.imagePath, this.lat, this.long});
   @override
   State<PhotoPreviewScreen> createState() => _PhotoPreviewScreenState();
 }
@@ -44,7 +47,7 @@ class _PhotoPreviewScreenState extends State<PhotoPreviewScreen> {
     );
   }
 
-  Widget _buildPhotoArea() {
+Widget _buildPhotoArea() {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 24),
       child: ClipRRect(
@@ -52,30 +55,38 @@ class _PhotoPreviewScreenState extends State<PhotoPreviewScreen> {
         child: Container(
           width: double.infinity,
           height: 260,
-          color: Colors.green.shade300,
-          child: Stack(
-            children: [
-              Container(
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
-                    colors: [
-                      Colors.green.shade400,
-                      Colors.green.shade700,
-                    ],
-                  ),
+          color: Colors.black12, // Placeholder warna jika gambar gagal muat
+          child: widget.imagePath != null
+              ? Image.file(
+                  File(widget.imagePath!),
+                  fit: BoxFit.cover, // Agar foto memenuhi area container
+                  errorBuilder: (context, error, stackTrace) {
+                    return const Center(child: Text('Gagal memuat gambar'));
+                  },
+                )
+              : Stack(
+                  children: [
+                    Container(
+                      decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                          begin: Alignment.topCenter,
+                          end: Alignment.bottomCenter,
+                          colors: [
+                            Colors.green.shade400,
+                            Colors.green.shade700,
+                          ],
+                        ),
+                      ),
+                    ),
+                    const Center(
+                      child: Icon(
+                        Icons.grass,
+                        size: 100,
+                        color: Colors.white54,
+                      ),
+                    ),
+                  ],
                 ),
-              ),
-              const Center(
-                child: Icon(
-                  Icons.grass,
-                  size: 100,
-                  color: Colors.white54,
-                ),
-              ),
-            ],
-          ),
         ),
       ),
     );
