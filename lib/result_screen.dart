@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'widgets/agroguard_header.dart';
 import 'widgets/animated_bottom_toggle.dart';
+import 'solution_screen.dart';
 
 class ResultScreen extends StatefulWidget {
   const ResultScreen({super.key});
@@ -203,7 +204,14 @@ class _ResultScreenState extends State<ResultScreen> {
         const SizedBox(width: 16),
         Expanded(
           child: ElevatedButton(
-            onPressed: () {},
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (_) => const SolutionScreen(),
+                ),
+              );
+            },
             style: ElevatedButton.styleFrom(
               backgroundColor: primaryGreen,
               padding: const EdgeInsets.symmetric(vertical: 16),

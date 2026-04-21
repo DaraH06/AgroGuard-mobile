@@ -1,6 +1,6 @@
 name: agrouardmobile
 description: "A new Flutter project."
-publish_to: 'none'
+publish_to: "none"
 version: 0.1.0
 
 environment:
@@ -24,7 +24,7 @@ dev_dependencies:
 flutter_launcher_icons:
   android: "launcher_icon"
   ios: true
-  image_path: "assets/icon/agro1.png"
+  image_path: "assets/icon/ikon-agro.png"
   min_sdk_android: 21
 
 flutter_native_splash:
@@ -32,6 +32,12 @@ flutter_native_splash:
   color: "#FFFFFF"
   android_gravity: center
   fullscreen: true
+  android_12:
+    image: "assets/icon/agro1.png"
+    icon_background_color: "#FFFFFF"
+    color: "#FFFFFF"
 
 flutter:
   uses-material-design: true
+  assets:
+    - assets/icons/
