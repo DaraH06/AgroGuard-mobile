@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'widgets/agroguard_header.dart';
-import 'widgets/scan_toggle.dart';
+import 'widgets/animated_bottom_toggle.dart';
+import 'solution_screen.dart';
 
 class ResultScreen extends StatefulWidget {
   const ResultScreen({super.key});
@@ -24,25 +25,29 @@ class _ResultScreenState extends State<ResultScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: bgLightGreen,
+      bottomNavigationBar: AnimatedBottomToggle(
+        isScanActive: isScanActive,
+        onToggle: _onToggle,
+      ),
       body: Column(
         children: [
           const AgroGuardHeader(),
           const SizedBox(height: 24),
-          ScanToggle(isScanActive: isScanActive, onToggle: _onToggle),
-          const SizedBox(height: 24),
           _buildPhotoArea(),
           const SizedBox(height: 20),
-          Expanded(child: SingleChildScrollView(
-            padding: const EdgeInsets.symmetric(horizontal: 24),
-            child: Column(
-              children: [
-                _buildResultCard(),
-                const SizedBox(height: 24),
-                _buildActionButtons(context),
-                const SizedBox(height: 32),
-              ],
+          Expanded(
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.symmetric(horizontal: 24),
+              child: Column(
+                children: [
+                  _buildResultCard(),
+                  const SizedBox(height: 24),
+                  _buildActionButtons(context),
+                  const SizedBox(height: 32),
+                ],
+              ),
             ),
-          )),
+          ),
         ],
       ),
     );
@@ -58,7 +63,6 @@ class _ResultScreenState extends State<ResultScreen> {
           height: 220,
           child: Stack(
             children: [
-              // Dummy background foto tanaman
               Container(
                 decoration: BoxDecoration(
                   gradient: LinearGradient(
@@ -103,7 +107,6 @@ class _ResultScreenState extends State<ResultScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Header hasil deteksi
           Row(
             children: [
               Container(
@@ -141,8 +144,7 @@ class _ResultScreenState extends State<ResultScreen> {
             ],
           ),
           const SizedBox(height: 20),
-          // Persentase akurasi
-          Center(
+          const Center(
             child: Text(
               '94%',
               style: TextStyle(
@@ -154,7 +156,6 @@ class _ResultScreenState extends State<ResultScreen> {
             ),
           ),
           const SizedBox(height: 20),
-          // Pesan deteksi
           Container(
             width: double.infinity,
             padding: const EdgeInsets.all(14),
@@ -203,7 +204,14 @@ class _ResultScreenState extends State<ResultScreen> {
         const SizedBox(width: 16),
         Expanded(
           child: ElevatedButton(
-            onPressed: () {},
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (_) => const SolutionScreen(),
+                ),
+              );
+            },
             style: ElevatedButton.styleFrom(
               backgroundColor: primaryGreen,
               padding: const EdgeInsets.symmetric(vertical: 16),

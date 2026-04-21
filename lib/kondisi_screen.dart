@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'widgets/agroguard_header.dart';
-import 'widgets/scan_toggle.dart';
+import 'widgets/animated_bottom_toggle.dart';
 
 class KondisiScreen extends StatefulWidget {
   const KondisiScreen({super.key});
@@ -16,7 +16,6 @@ class _KondisiScreenState extends State<KondisiScreen> {
   static const Color bgLightGreen = Color(0xFFF4FBF5);
   static const Color iconBgGreen = Color(0xFFD4EAE1);
 
-  // Dummy data untuk list berita
   final List<Map<String, String>> _beritaList = List.generate(
     5,
     (index) => {
@@ -29,7 +28,6 @@ class _KondisiScreenState extends State<KondisiScreen> {
   );
 
   void _onToggle(bool scanActive) {
-    setState(() => isScanActive = scanActive);
     if (scanActive) {
       Navigator.pop(context);
     }
@@ -39,12 +37,14 @@ class _KondisiScreenState extends State<KondisiScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: bgLightGreen,
+      bottomNavigationBar: AnimatedBottomToggle(
+        isScanActive: isScanActive,
+        onToggle: _onToggle,
+      ),
       body: Column(
         children: [
           const AgroGuardHeader(),
           const SizedBox(height: 24),
-          ScanToggle(isScanActive: isScanActive, onToggle: _onToggle),
-          const SizedBox(height: 20),
           _buildInfoBanner(),
           const SizedBox(height: 16),
           Expanded(child: _buildNewsList()),
@@ -95,10 +95,7 @@ class _KondisiScreenState extends State<KondisiScreen> {
                   SizedBox(height: 2),
                   Text(
                     'Pantau kondisi di wilayah Anda.',
-                    style: TextStyle(
-                      color: primaryGreen,
-                      fontSize: 12,
-                    ),
+                    style: TextStyle(color: primaryGreen, fontSize: 12),
                   ),
                 ],
               ),
@@ -136,7 +133,6 @@ class _KondisiScreenState extends State<KondisiScreen> {
       ),
       child: Row(
         children: [
-          // Dummy foto tanaman
           ClipRRect(
             borderRadius: const BorderRadius.only(
               topLeft: Radius.circular(16),
@@ -146,11 +142,7 @@ class _KondisiScreenState extends State<KondisiScreen> {
               width: 100,
               height: 100,
               color: Colors.green.shade200,
-              child: const Icon(
-                Icons.grass,
-                color: Colors.green,
-                size: 48,
-              ),
+              child: const Icon(Icons.grass, color: Colors.green, size: 48),
             ),
           ),
           const SizedBox(width: 12),
@@ -193,10 +185,7 @@ class _KondisiScreenState extends State<KondisiScreen> {
           Expanded(
             child: Text(
               text,
-              style: TextStyle(
-                color: Colors.grey.shade500,
-                fontSize: 11,
-              ),
+              style: TextStyle(color: Colors.grey.shade500, fontSize: 11),
               overflow: TextOverflow.ellipsis,
             ),
           ),
