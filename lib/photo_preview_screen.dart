@@ -2,13 +2,14 @@ import 'package:flutter/material.dart';
 import 'widgets/agroguard_header.dart';
 import 'widgets/animated_bottom_toggle.dart';
 import 'widgets/agro_info_banner.dart';
-import 'result_screen.dart';
+import 'services/upload_service.dart';
+import 'models/upload_result.dart';
 import 'dart:io';
 
 class PhotoPreviewScreen extends StatefulWidget {
   final String? imagePath;
-  final double? lat; 
-  final double? long; 
+  final double? lat;
+  final double? long;
   const PhotoPreviewScreen({super.key, this.imagePath, this.lat, this.long});
   @override
   State<PhotoPreviewScreen> createState() => _PhotoPreviewScreenState();
@@ -16,12 +17,91 @@ class PhotoPreviewScreen extends StatefulWidget {
 
 class _PhotoPreviewScreenState extends State<PhotoPreviewScreen> {
   bool isScanActive = true;
+  bool _isUploading = false;
 
   static const Color primaryGreen = Color(0xFF136B53);
   static const Color bgLightGreen = Color(0xFFF4FBF5);
 
   void _onToggle(bool scanActive) {
     setState(() => isScanActive = scanActive);
+  }
+
+  // Upload foto ke Laravel POST /api/upload
+  Future<void> _doUpload() async {
+    if (widget.imagePath == null) return;
+
+    setState(() => _isUploading = true);
+
+    try {
+      final UploadResult result = await UploadService.uploadImage(widget.imagePath!);
+      if (!mounted) return;
+      setState(() => _isUploading = false);
+      _showSuccessDialog(result);
+    } catch (e) {
+      if (!mounted) return;
+      setState(() => _isUploading = false);
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(e.toString().replaceFirst('Exception: ', '')),
+          backgroundColor: Colors.red.shade400,
+          behavior: SnackBarBehavior.floating,
+        ),
+      );
+    }
+  }
+
+  void _showSuccessDialog(UploadResult result) {
+    showDialog(
+      context: context,
+      builder: (_) => AlertDialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        title: Row(
+          children: [
+            Icon(Icons.check_circle_rounded, color: Colors.green.shade600),
+            const SizedBox(width: 8),
+            const Text('Upload Berhasil!'),
+          ],
+        ),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            _dialogRow('File', result.originalFilename),
+            const SizedBox(height: 8),
+            _dialogRow('Ukuran', result.fileSizeFormatted),
+            const SizedBox(height: 8),
+            _dialogRow('ID', result.id),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.pop(context); // tutup dialog
+              Navigator.pop(context); // kembali ke home
+            },
+            child: const Text('Selesai', style: TextStyle(color: primaryGreen)),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _dialogRow(String label, String value) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text('$label: ',
+            style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 13)),
+        Expanded(
+          child: Text(
+            value,
+            style: TextStyle(color: Colors.grey.shade700, fontSize: 13),
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
+          ),
+        ),
+      ],
+    );
   }
 
   @override
@@ -47,7 +127,7 @@ class _PhotoPreviewScreenState extends State<PhotoPreviewScreen> {
     );
   }
 
-Widget _buildPhotoArea() {
+  Widget _buildPhotoArea() {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 24),
       child: ClipRRect(
@@ -55,11 +135,11 @@ Widget _buildPhotoArea() {
         child: Container(
           width: double.infinity,
           height: 260,
-          color: Colors.black12, // Placeholder warna jika gambar gagal muat
+          color: Colors.black12,
           child: widget.imagePath != null
               ? Image.file(
                   File(widget.imagePath!),
-                  fit: BoxFit.cover, // Agar foto memenuhi area container
+                  fit: BoxFit.cover,
                   errorBuilder: (context, error, stackTrace) {
                     return const Center(child: Text('Gagal memuat gambar'));
                   },
@@ -99,7 +179,7 @@ Widget _buildPhotoArea() {
         children: [
           Expanded(
             child: OutlinedButton(
-              onPressed: () => Navigator.pop(context),
+              onPressed: _isUploading ? null : () => Navigator.pop(context),
               style: OutlinedButton.styleFrom(
                 padding: const EdgeInsets.symmetric(vertical: 16),
                 side: const BorderSide(color: primaryGreen, width: 1.5),
@@ -120,14 +200,7 @@ Widget _buildPhotoArea() {
           const SizedBox(width: 16),
           Expanded(
             child: ElevatedButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const ResultScreen(),
-                  ),
-                );
-              },
+              onPressed: _isUploading ? null : _doUpload,
               style: ElevatedButton.styleFrom(
                 backgroundColor: primaryGreen,
                 padding: const EdgeInsets.symmetric(vertical: 16),
@@ -136,14 +209,23 @@ Widget _buildPhotoArea() {
                 ),
                 elevation: 0,
               ),
-              child: const Text(
-                'Analisa Foto',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.w600,
-                  fontSize: 15,
-                ),
-              ),
+              child: _isUploading
+                  ? const SizedBox(
+                      width: 20,
+                      height: 20,
+                      child: CircularProgressIndicator(
+                        color: Colors.white,
+                        strokeWidth: 2.5,
+                      ),
+                    )
+                  : const Text(
+                      'Analisa Foto',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.w600,
+                        fontSize: 15,
+                      ),
+                    ),
             ),
           ),
         ],
