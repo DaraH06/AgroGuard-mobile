@@ -4,9 +4,9 @@ import 'dart:convert';
 import '../models/upload_result.dart';
 
 class UploadService {
-  // Pakai IP WiFi PC langsung (HP dan PC harus 1 jaringan WiFi)
-  // Jalankan Laravel: php artisan serve --host=0.0.0.0 --port=8000
-  static const String _host = '192.168.1.53:8000';
+  // Physical device via ADB — jalankan sekali: adb reverse tcp:8000 tcp:8000
+  // Emulator Android    — ganti ke: 10.0.2.2:8000
+  static const String _host = 'localhost:8000';
   static const String _baseUrl = 'http://$_host/api';
 
   /// Upload gambar ke Laravel POST /api/upload
