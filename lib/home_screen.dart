@@ -8,7 +8,6 @@ import 'package:image_picker/image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
-import 'dart:io';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -29,7 +28,8 @@ class _HomeScreenState extends State<HomeScreen> {
       Navigator.push(
         context,
         PageRouteBuilder(
-          pageBuilder: (context, animation1, animation2) => const KondisiScreen(),
+          pageBuilder: (context, animation1, animation2) =>
+              const KondisiScreen(),
           transitionDuration: Duration.zero,
           reverseTransitionDuration: Duration.zero,
         ),
@@ -40,7 +40,7 @@ class _HomeScreenState extends State<HomeScreen> {
   // Fungsi untuk menangani pengambilan gambar dari sumber tertentu
   Future<void> _pickImage(ImageSource source) async {
     final ImagePicker picker = ImagePicker();
-    
+
     // Ambil lokasi saat ini
     Position position = await Geolocator.getCurrentPosition(
       desiredAccuracy: LocationAccuracy.high,
@@ -154,13 +154,32 @@ class _HomeScreenState extends State<HomeScreen> {
                   shape: BoxShape.circle,
                 ),
                 child: const Center(
-                  child: Icon(Icons.camera_alt_outlined, color: primaryGreen, size: 40),
+                  child: Icon(
+                    Icons.camera_alt_outlined,
+                    color: primaryGreen,
+                    size: 40,
+                  ),
                 ),
               ),
               const SizedBox(height: 24),
-              const Text('Upload Foto Tanaman', style: TextStyle(color: primaryGreen, fontSize: 18, fontWeight: FontWeight.bold)),
+              const Text(
+                'Upload Foto Tanaman',
+                style: TextStyle(
+                  color: primaryGreen,
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
               const SizedBox(height: 12),
-              Text('Foto daun atau hama pada tanaman\npadi atau jagung', textAlign: TextAlign.center, style: TextStyle(color: Colors.grey.shade600, fontSize: 13, height: 1.4)),
+              Text(
+                'Foto daun atau hama pada tanaman\npadi atau jagung',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  color: Colors.grey.shade600,
+                  fontSize: 13,
+                  height: 1.4,
+                ),
+              ),
               const SizedBox(height: 32),
               ElevatedButton.icon(
                 onPressed: () async {
@@ -171,18 +190,37 @@ class _HomeScreenState extends State<HomeScreen> {
                     Permission.photos,
                   ].request();
 
-                  if (statuses[Permission.camera]!.isGranted && statuses[Permission.location]!.isGranted) {
+                  if (statuses[Permission.camera]!.isGranted &&
+                      statuses[Permission.location]!.isGranted) {
                     _showImageSourceDialog();
-                  } else if (statuses[Permission.camera]!.isPermanentlyDenied || statuses[Permission.location]!.isPermanentlyDenied) {
+                  } else if (statuses[Permission.camera]!.isPermanentlyDenied ||
+                      statuses[Permission.location]!.isPermanentlyDenied) {
                     openAppSettings();
                   } else {
                     if (!mounted) return;
-                    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Izin kamera dan lokasi diperlukan.')));
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text('Izin kamera dan lokasi diperlukan.'),
+                      ),
+                    );
                   }
                 },
                 icon: const Icon(Icons.camera_alt_rounded, color: Colors.white),
-                label: const Text('Ambil Foto', style: TextStyle(color: Colors.white, fontSize: 16)),
-                style: ElevatedButton.styleFrom(backgroundColor: primaryGreen, padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 14), shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)), elevation: 0),
+                label: const Text(
+                  'Ambil Foto',
+                  style: TextStyle(color: Colors.white, fontSize: 16),
+                ),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: primaryGreen,
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 32,
+                    vertical: 14,
+                  ),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  elevation: 0,
+                ),
               ),
             ],
           ),
@@ -197,8 +235,18 @@ class _DashedBorder extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    final paint = Paint()..color = primaryGreen.withValues(alpha: 0.4)..strokeWidth = 1.5..style = PaintingStyle.stroke..strokeCap = StrokeCap.round;
-    final path = Path()..addRRect(RRect.fromRectAndRadius(Rect.fromLTWH(0, 0, size.width, size.height), const Radius.circular(20)));
+    final paint = Paint()
+      ..color = primaryGreen.withValues(alpha: 0.4)
+      ..strokeWidth = 1.5
+      ..style = PaintingStyle.stroke
+      ..strokeCap = StrokeCap.round;
+    final path = Path()
+      ..addRRect(
+        RRect.fromRectAndRadius(
+          Rect.fromLTWH(0, 0, size.width, size.height),
+          const Radius.circular(20),
+        ),
+      );
 
     for (final metric in path.computeMetrics()) {
       double d = 0;
