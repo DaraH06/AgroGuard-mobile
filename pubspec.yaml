@@ -14,6 +14,7 @@ dependencies:
   geolocator: ^13.0.1
   flutter_image_compress: ^2.4.0
   http: ^1.1.0
+  flutter_dotenv: ^5.2.1
 
 dev_dependencies:
   flutter_test:
@@ -41,4 +42,5 @@ flutter_native_splash:
 flutter:
   uses-material-design: true
   assets:
-    - assets/icons/
+    - assets/icon/
+    - .env

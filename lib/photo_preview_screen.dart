@@ -51,6 +51,20 @@ class _PhotoPreviewScreenState extends State<PhotoPreviewScreen> {
   }
 
   void _showSuccessDialog(UploadResult result) {
+    if (result.hasil.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Data upload tidak tersedia'),
+          backgroundColor: Colors.red,
+        ),
+      );
+      return;
+    }
+
+    final data = result.hasil.first as Map<String, dynamic>;
+    final filename = data['original_filename'] ?? 'Unknown';
+    final id = data['id'] ?? 'N/A';
+
     showDialog(
       context: context,
       builder: (_) => AlertDialog(
@@ -66,11 +80,9 @@ class _PhotoPreviewScreenState extends State<PhotoPreviewScreen> {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            _dialogRow('File', result.originalFilename),
+            _dialogRow('File', filename.toString()),
             const SizedBox(height: 8),
-            _dialogRow('Ukuran', result.fileSizeFormatted),
-            const SizedBox(height: 8),
-            _dialogRow('ID', result.id),
+            _dialogRow('ID', id.toString()),
           ],
         ),
         actions: [
