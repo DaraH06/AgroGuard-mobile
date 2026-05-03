@@ -4,9 +4,10 @@ import 'dart:convert';
 import '../models/upload_result.dart';
 
 class UploadService {
-  // Physical device via ADB — jalankan sekali: adb reverse tcp:8000 tcp:8000
-  // Emulator Android    — ganti ke: 10.0.2.2:8000
-  static const String _host = 'localhost:8000';
+  // Same WiFi — jalankan: php artisan serve --host=0.0.0.0 --port=8000
+  // Physical device via ADB — ganti ke: localhost:8000 + adb reverse tcp:8000 tcp:8000
+  // Emulator Android       — ganti ke: 10.0.2.2:8000
+  static const String _host = '192.168.1.53:8000';
   static const String _baseUrl = 'http://$_host/api';
 
   /// Upload gambar ke Laravel POST /api/upload
@@ -22,7 +23,8 @@ class UploadService {
       final streamed = await request.send().timeout(
         const Duration(seconds: 30),
         onTimeout: () => throw Exception(
-            'Request timeout — pastikan Laravel server berjalan di $_host'),
+          'Request timeout — pastikan Laravel server berjalan di $_host',
+        ),
       );
 
       final response = await http.Response.fromStream(streamed);
@@ -37,7 +39,8 @@ class UploadService {
       }
     } on SocketException {
       throw Exception(
-          'Tidak dapat terhubung ke server. Pastikan Laravel berjalan di $_host');
+        'Tidak dapat terhubung ke server. Pastikan Laravel berjalan di $_host',
+      );
     } on FormatException {
       throw Exception('Respons dari server tidak valid');
     }
