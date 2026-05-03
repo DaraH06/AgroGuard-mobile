@@ -40,4 +40,5 @@ flutter_native_splash:
 flutter:
   uses-material-design: true
   assets:
-    - assets/icons/
+    - assets/icon/agro1.png
+    - assets/icon/ikon-agro.png
