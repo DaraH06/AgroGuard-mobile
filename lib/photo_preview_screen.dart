@@ -65,6 +65,14 @@ class _PhotoPreviewScreenState extends State<PhotoPreviewScreen> {
     final filename = data['original_filename'] ?? 'Unknown';
     final id = data['id'] ?? 'N/A';
 
+    // Prepare extraction display if present
+    final extraction = result.extraction;
+    List<dynamic>? features;
+    if (extraction != null && extraction['status'] == true) {
+      final raw = extraction['hasil'];
+      if (raw is List) features = raw;
+    }
+
     showDialog(
       context: context,
       builder: (_) => AlertDialog(
@@ -83,6 +91,18 @@ class _PhotoPreviewScreenState extends State<PhotoPreviewScreen> {
             _dialogRow('File', filename.toString()),
             const SizedBox(height: 8),
             _dialogRow('ID', id.toString()),
+              const SizedBox(height: 8),
+              // Show extraction features when available
+              if (features != null) ...[
+                const SizedBox(height: 8),
+                Text('Hasil Ekstraksi:', style: TextStyle(fontWeight: FontWeight.w600)),
+                const SizedBox(height: 6),
+                _dialogRow('R (mean)', features.length > 0 ? features[0].toString() : '-'),
+                _dialogRow('G (mean)', features.length > 1 ? features[1].toString() : '-'),
+                _dialogRow('B (mean)', features.length > 2 ? features[2].toString() : '-'),
+                _dialogRow('G_std', features.length > 3 ? features[3].toString() : '-'),
+                _dialogRow('ExG', features.length > 4 ? features[4].toString() : '-'),
+              ],
           ],
         ),
         actions: [
