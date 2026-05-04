@@ -1,13 +1,13 @@
 import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import '../models/upload_result.dart';
 
 class UploadService {
-  // Physical device via ADB — jalankan sekali: adb reverse tcp:8000 tcp:8000
-  // Emulator Android    — ganti ke: 10.0.2.2:8000
-  static const String _host = 'localhost:8000';
-  static const String _baseUrl = 'http://$_host/api';
+  static final String _host =
+      '${dotenv.env['IP_ADDRESS']}:${dotenv.env['PORT']}';
+  static final String _baseUrl = 'http://$_host/api';
 
   /// Upload gambar ke Laravel POST /api/upload
   /// Field multipart: 'image'
@@ -20,9 +20,10 @@ class UploadService {
 
     try {
       final streamed = await request.send().timeout(
-        const Duration(seconds: 30),
+        const Duration(seconds: 20),
         onTimeout: () => throw Exception(
-            'Request timeout — pastikan Laravel server berjalan di $_host'),
+          'Request timeout — pastikan Laravel server berjalan di $_host',
+        ),
       );
 
       final response = await http.Response.fromStream(streamed);
@@ -37,7 +38,8 @@ class UploadService {
       }
     } on SocketException {
       throw Exception(
-          'Tidak dapat terhubung ke server. Pastikan Laravel berjalan di $_host');
+        'Tidak dapat terhubung ke server. Pastikan Laravel berjalan di $_host',
+      );
     } on FormatException {
       throw Exception('Respons dari server tidak valid');
     }

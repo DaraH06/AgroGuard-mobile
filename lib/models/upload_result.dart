@@ -1,39 +1,38 @@
+import 'package:flutter/foundation.dart';
+
 class UploadResult {
-  final String id;
-  final String imagePath;
-  final String imageUrl;
-  final String originalFilename;
-  final int fileSize;
-  final DateTime uploadedAt;
+  final List hasil;
+  final Map<String, dynamic>? extraction;
 
   UploadResult({
-    required this.id,
-    required this.imagePath,
-    required this.imageUrl,
-    required this.originalFilename,
-    required this.fileSize,
-    required this.uploadedAt,
+    required this.hasil,
+    this.extraction,
   });
 
   factory UploadResult.fromJson(Map<String, dynamic> json) {
-    final data = json['data'] as Map<String, dynamic>;
-    return UploadResult(
-      id: data['id']?.toString() ?? '',
-      imagePath: data['image_path']?.toString() ?? '',
-      imageUrl: data['image_url']?.toString() ?? '',
-      originalFilename: data['original_filename']?.toString() ?? '',
-      fileSize: (data['file_size'] as num?)?.toInt() ?? 0,
-      uploadedAt: data['uploaded_at'] != null
-          ? DateTime.tryParse(data['uploaded_at'].toString()) ?? DateTime.now()
-          : DateTime.now(),
-    );
-  }
+    debugPrint("Struktur JSON : $json");
+    debugPrint("Isi kunci 'data': ${json['data']}");
+    debugPrint("Isi kunci 'extraction': ${json['extraction']}");
 
-  String get fileSizeFormatted {
-    if (fileSize < 1024) return '$fileSize B';
-    if (fileSize < 1024 * 1024) {
-      return '${(fileSize / 1024).toStringAsFixed(1)} KB';
+    // Handle both List and Map responses for main data
+    final data = json['data'] ?? json['hasil'];
+    List hasil = [];
+
+    if (data is List) {
+      hasil = data;
+    } else if (data is Map) {
+      hasil = [data];
     }
-    return '${(fileSize / (1024 * 1024)).toStringAsFixed(1)} MB';
+
+    // Extraction can be a Map (from Flask) or null
+    Map<String, dynamic>? extraction;
+    if (json['extraction'] != null && json['extraction'] is Map) {
+      extraction = Map<String, dynamic>.from(json['extraction']);
+    }
+
+    return UploadResult(
+      hasil: hasil,
+      extraction: extraction,
+    );
   }
 }
