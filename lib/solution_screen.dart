@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'widgets/agroguard_header.dart';
-import 'widgets/animated_bottom_toggle.dart';
 
 class SolutionScreen extends StatefulWidget {
   const SolutionScreen({super.key});
@@ -10,25 +9,16 @@ class SolutionScreen extends StatefulWidget {
 }
 
 class _SolutionScreenState extends State<SolutionScreen> {
-  bool isScanActive = true;
   int _selectedTab = 0; // 0: Penanganan, 1: Pencegahan, 2: Tips
 
   static const Color primaryGreen = Color(0xFF136B53);
   static const Color bgLightGreen = Color(0xFFF4FBF5);
   static const Color cardBg = Color(0xFFEAF5EE);
 
-  void _onToggle(bool scanActive) {
-    setState(() => isScanActive = scanActive);
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: bgLightGreen,
-      bottomNavigationBar: AnimatedBottomToggle(
-        isScanActive: isScanActive,
-        onToggle: _onToggle,
-      ),
       body: Column(
         children: [
           const AgroGuardHeader(),

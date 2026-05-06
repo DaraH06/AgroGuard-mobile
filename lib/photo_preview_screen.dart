@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'widgets/agroguard_header.dart';
-import 'widgets/animated_bottom_toggle.dart';
+
 import 'widgets/agro_info_banner.dart';
 import 'result_screen.dart';
 import 'dart:io';
@@ -15,23 +15,14 @@ class PhotoPreviewScreen extends StatefulWidget {
 }
 
 class _PhotoPreviewScreenState extends State<PhotoPreviewScreen> {
-  bool isScanActive = true;
-
   static const Color primaryGreen = Color(0xFF136B53);
   static const Color bgLightGreen = Color(0xFFF4FBF5);
-
-  void _onToggle(bool scanActive) {
-    setState(() => isScanActive = scanActive);
-  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: bgLightGreen,
-      bottomNavigationBar: AnimatedBottomToggle(
-        isScanActive: isScanActive,
-        onToggle: _onToggle,
-      ),
+
       body: Column(
         children: [
           const AgroGuardHeader(),

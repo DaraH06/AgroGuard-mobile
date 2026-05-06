@@ -1,34 +1,28 @@
 import 'package:flutter/material.dart';
 import 'widgets/agroguard_header.dart';
-import 'widgets/animated_bottom_toggle.dart';
 import 'solution_screen.dart';
+import 'dart:io';
 
 class ResultScreen extends StatefulWidget {
-  const ResultScreen({super.key});
+  final String? imagePath;
+  final double? lat;
+  final double? long;
+
+  const ResultScreen({super.key, this.imagePath, this.lat, this.long});
 
   @override
   State<ResultScreen> createState() => _ResultScreenState();
 }
 
 class _ResultScreenState extends State<ResultScreen> {
-  bool isScanActive = true;
-
   static const Color primaryGreen = Color(0xFF136B53);
   static const Color bgLightGreen = Color(0xFFF4FBF5);
   static const Color resultCardBg = Color(0xFFEAF5EE);
-
-  void _onToggle(bool scanActive) {
-    setState(() => isScanActive = scanActive);
-  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: bgLightGreen,
-      bottomNavigationBar: AnimatedBottomToggle(
-        isScanActive: isScanActive,
-        onToggle: _onToggle,
-      ),
       body: Column(
         children: [
           const AgroGuardHeader(),
@@ -58,32 +52,41 @@ class _ResultScreenState extends State<ResultScreen> {
       padding: const EdgeInsets.symmetric(horizontal: 24),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(20),
-        child: SizedBox(
+        child: Container(
           width: double.infinity,
           height: 220,
-          child: Stack(
-            children: [
-              Container(
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
-                    colors: [
-                      Colors.green.shade400,
-                      Colors.green.shade700,
-                    ],
-                  ),
+          color: Colors.black12,
+          child: widget.imagePath != null
+              ? Image.file(
+                  File(widget.imagePath!),
+                  fit: BoxFit.cover,
+                  errorBuilder: (context, error, stackTrace) {
+                    return const Center(child: Text('Gagal memuat gambar'));
+                  },
+                )
+              : Stack(
+                  children: [
+                    Container(
+                      decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                          begin: Alignment.topCenter,
+                          end: Alignment.bottomCenter,
+                          colors: [
+                            Colors.green.shade400,
+                            Colors.green.shade700,
+                          ],
+                        ),
+                      ),
+                    ),
+                    const Center(
+                      child: Icon(
+                        Icons.grass,
+                        size: 80,
+                        color: Colors.white54,
+                      ),
+                    ),
+                  ],
                 ),
-              ),
-              const Center(
-                child: Icon(
-                  Icons.grass,
-                  size: 80,
-                  color: Colors.white54,
-                ),
-              ),
-            ],
-          ),
         ),
       ),
     );
