@@ -3,7 +3,7 @@ import 'widgets/agroguard_header.dart';
 import 'widgets/animated_bottom_toggle.dart';
 import 'widgets/agro_info_banner.dart';
 import 'kondisi_screen.dart';
-import 'result_screen.dart';
+import 'photo_preview_screen.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:geolocator/geolocator.dart';
@@ -74,7 +74,7 @@ class _HomeScreenState extends State<HomeScreen> {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (_) => ResultScreen(
+            builder: (_) => PhotoPreviewScreen(
               imagePath: result.path,
               lat: position.latitude,
               long: position.longitude,

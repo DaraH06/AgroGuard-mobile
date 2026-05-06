@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'widgets/agroguard_header.dart';
+import 'widgets/animated_bottom_toggle.dart';
 import 'solution_screen.dart';
 import 'kondisi_screen.dart';
 import 'dart:io';
@@ -29,6 +30,8 @@ class ResultScreen extends StatefulWidget {
 }
 
 class _ResultScreenState extends State<ResultScreen> {
+  bool isScanActive = true;
+
   static const Color primaryGreen = Color(0xFF136B53);
   static const Color bgLightGreen = Color(0xFFF4FBF5);
   static const Color resultCardBg = Color(0xFFEAF5EE);
@@ -66,6 +69,10 @@ class _ResultScreenState extends State<ResultScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: bgLightGreen,
+      bottomNavigationBar: AnimatedBottomToggle(
+        isScanActive: isScanActive,
+        onToggle: _onToggle,
+      ),
       body: Column(
         children: [
           const AgroGuardHeader(),
