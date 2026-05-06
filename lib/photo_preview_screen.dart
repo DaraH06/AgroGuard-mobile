@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'widgets/agroguard_header.dart';
-import 'widgets/animated_bottom_toggle.dart';
+
 import 'widgets/agro_info_banner.dart';
 import 'services/upload_service.dart';
 import 'models/upload_result.dart';
@@ -70,10 +70,7 @@ class _PhotoPreviewScreenState extends State<PhotoPreviewScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: bgLightGreen,
-      bottomNavigationBar: AnimatedBottomToggle(
-        isScanActive: isScanActive,
-        onToggle: _onToggle,
-      ),
+
       body: Column(
         children: [
           const AgroGuardHeader(),

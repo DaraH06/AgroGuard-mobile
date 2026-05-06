@@ -49,10 +49,6 @@ class _SolutionScreenState extends State<SolutionScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: bgLightGreen,
-      bottomNavigationBar: AnimatedBottomToggle(
-        isScanActive: isScanActive,
-        onToggle: _onToggle,
-      ),
       body: Column(
         children: [
           const AgroGuardHeader(),
