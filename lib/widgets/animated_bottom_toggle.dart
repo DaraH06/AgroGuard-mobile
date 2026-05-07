@@ -59,8 +59,24 @@ class _AnimatedBottomToggleState extends State<AnimatedBottomToggle>
     super.dispose();
   }
 
+  bool _isProcessing = false;
+
   void _handleTap(bool scanActive) {
+    if (_isProcessing || scanActive == widget.isScanActive) return;
+
+    setState(() {
+      _isProcessing = true;
+    });
+
     widget.onToggle(scanActive);
+
+    Future.delayed(const Duration(milliseconds: 250), () {
+      if (mounted) {
+        setState(() {
+          _isProcessing = false;
+        });
+      }
+    });
   }
 
   @override

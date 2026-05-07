@@ -27,7 +27,11 @@ class _KondisiScreenState extends State<KondisiScreen> {
     },
   );
 
-  void _onToggle(bool scanActive) {
+  void _onToggle(bool scanActive) async {
+    setState(() => isScanActive = scanActive);
+    await Future.delayed(const Duration(milliseconds: 300));
+    if (!mounted) return;
+
     if (scanActive) {
       Navigator.pop(context);
     }

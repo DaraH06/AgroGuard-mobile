@@ -36,8 +36,11 @@ class _ResultScreenState extends State<ResultScreen> {
   static const Color bgLightGreen = Color(0xFFF4FBF5);
   static const Color resultCardBg = Color(0xFFEAF5EE);
 
-  void _onToggle(bool scanActive) {
+  void _onToggle(bool scanActive) async {
     setState(() => isScanActive = scanActive);
+    await Future.delayed(const Duration(milliseconds: 300));
+    if (!mounted) return;
+
     if (scanActive) {
       Navigator.popUntil(context, (route) => route.isFirst);
     } else {
