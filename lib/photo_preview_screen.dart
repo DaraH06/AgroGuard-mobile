@@ -5,6 +5,7 @@ import 'widgets/agro_info_banner.dart';
 import 'services/upload_service.dart';
 import 'models/upload_result.dart';
 import 'result_screen.dart';
+import 'kondisi_screen.dart';
 import 'dart:io';
 
 class PhotoPreviewScreen extends StatefulWidget {
@@ -25,6 +26,20 @@ class _PhotoPreviewScreenState extends State<PhotoPreviewScreen> {
 
   void _onToggle(bool scanActive) {
     setState(() => isScanActive = scanActive);
+    if (scanActive) {
+      Navigator.popUntil(context, (route) => route.isFirst);
+    } else {
+      Navigator.pushAndRemoveUntil(
+        context,
+        PageRouteBuilder(
+          pageBuilder: (context, animation1, animation2) =>
+              const KondisiScreen(),
+          transitionDuration: Duration.zero,
+          reverseTransitionDuration: Duration.zero,
+        ),
+        (route) => route.isFirst,
+      );
+    }
   }
 
   // Upload foto ke Laravel POST /api/upload lalu navigasi ke ResultScreen
