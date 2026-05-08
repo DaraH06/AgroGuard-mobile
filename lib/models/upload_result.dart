@@ -6,6 +6,7 @@ class UploadResult {
 
   // Parsed analysis fields from extraction
   final String? namaPenyakit;
+  final List<String> deskripsi;
   final List<String> penanganan;
   final List<String> penanggulangan;
   final Map<String, String> tingkatKeyakinan;
@@ -14,6 +15,7 @@ class UploadResult {
     required this.hasil,
     this.extraction,
     this.namaPenyakit,
+    this.deskripsi = const [],
     this.penanganan = const [],
     this.penanggulangan = const [],
     this.tingkatKeyakinan = const {},
@@ -54,6 +56,7 @@ class UploadResult {
     // Parse extraction (analysis result from Flask → Laravel)
     Map<String, dynamic>? extraction;
     String? namaPenyakit;
+    List<String> deskripsi = [];
     List<String> penanganan = [];
     List<String> penanggulangan = [];
     Map<String, String> tingkatKeyakinan = {};
@@ -65,6 +68,12 @@ class UploadResult {
       final hasilAnalisis = extraction['hasil'];
       if (hasilAnalisis != null && hasilAnalisis is Map) {
         namaPenyakit = hasilAnalisis['nama_penyakit']?.toString();
+
+        if (hasilAnalisis['deskripsi'] is List) {
+          deskripsi = List<String>.from(
+            (hasilAnalisis['deskripsi'] as List).map((e) => e.toString()),
+          );
+        }
 
         if (hasilAnalisis['penanganan'] is List) {
           penanganan = List<String>.from(
@@ -95,6 +104,7 @@ class UploadResult {
       hasil: hasil,
       extraction: extraction,
       namaPenyakit: namaPenyakit,
+      deskripsi: deskripsi,
       penanganan: penanganan,
       penanggulangan: penanggulangan,
       tingkatKeyakinan: tingkatKeyakinan,

@@ -5,12 +5,14 @@ import 'kondisi_screen.dart';
 
 class SolutionScreen extends StatefulWidget {
   final String namaPenyakit;
+  final List<String> deskripsi;
   final List<String> penanganan;
   final List<String> penanggulangan;
 
   const SolutionScreen({
     super.key,
     required this.namaPenyakit,
+    this.deskripsi = const [],
     this.penanganan = const [],
     this.penanggulangan = const [],
   });
@@ -21,7 +23,7 @@ class SolutionScreen extends StatefulWidget {
 
 class _SolutionScreenState extends State<SolutionScreen> {
   bool isScanActive = true;
-  int _selectedTab = 0; // 0: Penanganan, 1: Pencegahan
+  int _selectedTab = 0; // 0: Deskripsi, 1: Penanganan, 2: Pencegahan
 
   static const Color primaryGreen = Color(0xFF136B53);
   static const Color bgLightGreen = Color(0xFFF4FBF5);
@@ -136,9 +138,9 @@ class _SolutionScreenState extends State<SolutionScreen> {
     );
   }
 
-  // ── Tab bar: Penanganan / Pencegahan ────────────────────────────────────────
+  // ── Tab bar: Deskripsi / Penanganan / Pencegahan ───────────────────────────
   Widget _buildTabBar() {
-    const tabs = ['Penanganan', 'Pencegahan'];
+    const tabs = ['Deskripsi', 'Penanganan', 'Pencegahan'];
     return Container(
       height: 42,
       decoration: BoxDecoration(
@@ -190,13 +192,15 @@ class _SolutionScreenState extends State<SolutionScreen> {
   Widget _buildTabContent() {
     switch (_selectedTab) {
       case 0:
+        return _buildDeskripsiContent();
+      case 1:
         return _buildListContent(
           items: widget.penanganan,
           icon: '🌿',
           title: 'Langkah Penanganan',
           emptyMessage: 'Tidak ada data penanganan.',
         );
-      case 1:
+      case 2:
         return _buildListContent(
           items: widget.penanggulangan,
           icon: '🛡️',
@@ -206,6 +210,109 @@ class _SolutionScreenState extends State<SolutionScreen> {
       default:
         return const SizedBox.shrink();
     }
+  }
+
+  // ── Konten deskripsi penyakit ──────────────────────────────────────────────
+  Widget _buildDeskripsiContent() {
+    if (widget.deskripsi.isEmpty) {
+      return Container(
+        width: double.infinity,
+        padding: const EdgeInsets.all(24),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(16),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withValues(alpha: 0.04),
+              blurRadius: 8,
+              offset: const Offset(0, 2),
+            ),
+          ],
+        ),
+        child: Column(
+          children: [
+            Icon(Icons.info_outline, color: Colors.grey.shade400, size: 40),
+            const SizedBox(height: 12),
+            Text(
+              'Tidak ada deskripsi penyakit.',
+              style: TextStyle(
+                color: Colors.grey.shade600,
+                fontSize: 14,
+              ),
+            ),
+          ],
+        ),
+      );
+    }
+
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(18),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.05),
+            blurRadius: 10,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Judul section
+          Row(
+            children: [
+              const Text('📋', style: TextStyle(fontSize: 22)),
+              const SizedBox(width: 10),
+              Expanded(
+                child: Text(
+                  'Deskripsi ${widget.namaPenyakit}',
+                  style: const TextStyle(
+                    color: primaryGreen,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 15,
+                  ),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 16),
+          // List paragraf deskripsi
+          ...widget.deskripsi.asMap().entries.map(
+                (entry) => Padding(
+                  padding: const EdgeInsets.only(bottom: 12),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Container(
+                        width: 8,
+                        height: 8,
+                        margin: const EdgeInsets.only(right: 12, top: 6),
+                        decoration: BoxDecoration(
+                          color: primaryGreen,
+                          borderRadius: BorderRadius.circular(4),
+                        ),
+                      ),
+                      Expanded(
+                        child: Text(
+                          entry.value,
+                          style: const TextStyle(
+                            color: Colors.black87,
+                            fontSize: 13,
+                            height: 1.5,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+        ],
+      ),
+    );
   }
 
   // ── Builder dinamis untuk list penanganan / penanggulangan ─────────────────

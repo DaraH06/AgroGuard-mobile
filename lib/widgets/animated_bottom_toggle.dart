@@ -27,7 +27,7 @@ class _AnimatedBottomToggleState extends State<AnimatedBottomToggle>
     super.initState();
     _controller = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 350),
+      duration: const Duration(milliseconds: 200),
     );
 
     _scaleAnimation = Tween<double>(begin: 0.95, end: 1).animate(

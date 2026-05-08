@@ -65,6 +65,7 @@ class _PhotoPreviewScreenState extends State<PhotoPreviewScreen> {
             namaPenyakit: result.namaPenyakit,
             topConfidence: result.topConfidence,
             tingkatKeyakinan: result.tingkatKeyakinan,
+            deskripsi: result.deskripsi,
             penanganan: result.penanganan,
             penanggulangan: result.penanggulangan,
             isHealthy: result.isHealthy,
