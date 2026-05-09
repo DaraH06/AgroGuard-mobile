@@ -33,8 +33,10 @@ class UploadService {
         return UploadResult.fromJson(body);
       } else {
         final message = body['message']?.toString() ?? 'Upload gagal';
-        final errors = body['errors'];
-        throw Exception(errors != null ? '$message: $errors' : message);
+        final error = body['error']?.toString();
+        final errors = body['errors']?.toString();
+        final detail = error ?? errors;
+        throw Exception(detail != null ? '$message: $detail' : message);
       }
     } on SocketException {
       throw Exception(

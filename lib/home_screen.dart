@@ -18,13 +18,25 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   bool isScanActive = true;
+  Key toggleKey = UniqueKey();
 
   static const Color primaryGreen = Color(0xFF136B53);
   static const Color bgLightGreen = Color(0xFFF4FBF5);
   static const Color iconBgLightGreen = Color(0xFFCBEAD7);
 
-  void _onToggle(bool scanActive) {
+  void _onToggle(bool scanActive) async {
+    setState(() => isScanActive = scanActive);
+    await Future.delayed(const Duration(milliseconds: 300));
+    if (!mounted) return;
+
     if (!scanActive) {
+      // Reset state dan paksa recreate widget di belakang layar 
+      // SEBELUM navigasi agar tidak ada flicker/refresh animasi saat kembali
+      setState(() {
+        isScanActive = true;
+        toggleKey = UniqueKey();
+      });
+
       Navigator.push(
         context,
         PageRouteBuilder(
@@ -119,6 +131,7 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
       backgroundColor: bgLightGreen,
       bottomNavigationBar: AnimatedBottomToggle(
+        key: toggleKey,
         isScanActive: isScanActive,
         onToggle: _onToggle,
       ),

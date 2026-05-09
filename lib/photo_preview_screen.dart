@@ -24,8 +24,11 @@ class _PhotoPreviewScreenState extends State<PhotoPreviewScreen> {
   static const Color primaryGreen = Color(0xFF136B53);
   static const Color bgLightGreen = Color(0xFFF4FBF5);
 
-  void _onToggle(bool scanActive) {
+  void _onToggle(bool scanActive) async {
     setState(() => isScanActive = scanActive);
+    await Future.delayed(const Duration(milliseconds: 300));
+    if (!mounted) return;
+
     if (scanActive) {
       Navigator.popUntil(context, (route) => route.isFirst);
     } else {
@@ -62,6 +65,7 @@ class _PhotoPreviewScreenState extends State<PhotoPreviewScreen> {
             namaPenyakit: result.namaPenyakit,
             topConfidence: result.topConfidence,
             tingkatKeyakinan: result.tingkatKeyakinan,
+            deskripsi: result.deskripsi,
             penanganan: result.penanganan,
             penanggulangan: result.penanggulangan,
             isHealthy: result.isHealthy,

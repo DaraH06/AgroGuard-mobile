@@ -10,6 +10,7 @@ class ResultScreen extends StatefulWidget {
   final String? namaPenyakit;
   final String topConfidence;
   final Map<String, String> tingkatKeyakinan;
+  final List<String> deskripsi;
   final List<String> penanganan;
   final List<String> penanggulangan;
   final bool isHealthy;
@@ -20,6 +21,7 @@ class ResultScreen extends StatefulWidget {
     this.namaPenyakit,
     this.topConfidence = '0%',
     this.tingkatKeyakinan = const {},
+    this.deskripsi = const [],
     this.penanganan = const [],
     this.penanggulangan = const [],
     this.isHealthy = false,
@@ -36,8 +38,11 @@ class _ResultScreenState extends State<ResultScreen> {
   static const Color bgLightGreen = Color(0xFFF4FBF5);
   static const Color resultCardBg = Color(0xFFEAF5EE);
 
-  void _onToggle(bool scanActive) {
+  void _onToggle(bool scanActive) async {
     setState(() => isScanActive = scanActive);
+    await Future.delayed(const Duration(milliseconds: 300));
+    if (!mounted) return;
+
     if (scanActive) {
       Navigator.popUntil(context, (route) => route.isFirst);
     } else {
@@ -364,6 +369,7 @@ class _ResultScreenState extends State<ResultScreen> {
                   MaterialPageRoute(
                     builder: (_) => SolutionScreen(
                       namaPenyakit: widget.namaPenyakit ?? 'Tidak diketahui',
+                      deskripsi: widget.deskripsi,
                       penanganan: widget.penanganan,
                       penanggulangan: widget.penanggulangan,
                     ),
