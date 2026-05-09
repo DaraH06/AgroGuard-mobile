@@ -1,9 +1,21 @@
 import 'package:flutter/material.dart';
 import 'widgets/agroguard_header.dart';
 import 'widgets/animated_bottom_toggle.dart';
+import 'kondisi_screen.dart';
 
 class SolutionScreen extends StatefulWidget {
-  const SolutionScreen({super.key});
+  final String namaPenyakit;
+  final List<String> deskripsi;
+  final List<String> penanganan;
+  final List<String> penanggulangan;
+
+  const SolutionScreen({
+    super.key,
+    required this.namaPenyakit,
+    this.deskripsi = const [],
+    this.penanganan = const [],
+    this.penanggulangan = const [],
+  });
 
   @override
   State<SolutionScreen> createState() => _SolutionScreenState();
@@ -11,14 +23,31 @@ class SolutionScreen extends StatefulWidget {
 
 class _SolutionScreenState extends State<SolutionScreen> {
   bool isScanActive = true;
-  int _selectedTab = 0; // 0: Penanganan, 1: Pencegahan, 2: Tips
+  int _selectedTab = 0; // 0: Deskripsi, 1: Penanganan, 2: Pencegahan
 
   static const Color primaryGreen = Color(0xFF136B53);
   static const Color bgLightGreen = Color(0xFFF4FBF5);
   static const Color cardBg = Color(0xFFEAF5EE);
 
-  void _onToggle(bool scanActive) {
+  void _onToggle(bool scanActive) async {
     setState(() => isScanActive = scanActive);
+    await Future.delayed(const Duration(milliseconds: 300));
+    if (!mounted) return;
+
+    if (scanActive) {
+      Navigator.popUntil(context, (route) => route.isFirst);
+    } else {
+      Navigator.pushAndRemoveUntil(
+        context,
+        PageRouteBuilder(
+          pageBuilder: (context, animation1, animation2) =>
+              const KondisiScreen(),
+          transitionDuration: Duration.zero,
+          reverseTransitionDuration: Duration.zero,
+        ),
+        (route) => route.isFirst,
+      );
+    }
   }
 
   @override
@@ -80,20 +109,20 @@ class _SolutionScreenState extends State<SolutionScreen> {
             ),
           ),
           const SizedBox(width: 14),
-          const Expanded(
+          Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Solusi untuk Hawar Daun Bakteri',
-                  style: TextStyle(
+                  'Solusi untuk ${widget.namaPenyakit}',
+                  style: const TextStyle(
                     color: primaryGreen,
                     fontWeight: FontWeight.bold,
                     fontSize: 15,
                   ),
                 ),
-                SizedBox(height: 4),
-                Text(
+                const SizedBox(height: 4),
+                const Text(
                   'Ikuti panduan di bawah untuk mengatasi masalah ini',
                   style: TextStyle(
                     color: primaryGreen,
@@ -109,9 +138,9 @@ class _SolutionScreenState extends State<SolutionScreen> {
     );
   }
 
-  // ── Tab bar: Penanganan / Pencegahan / Tips ─────────────────────────────────
+  // ── Tab bar: Deskripsi / Penanganan / Pencegahan ───────────────────────────
   Widget _buildTabBar() {
-    const tabs = ['Penanganan', 'Pencegahan', 'Tips'];
+    const tabs = ['Deskripsi', 'Penanganan', 'Pencegahan'];
     return Container(
       height: 42,
       decoration: BoxDecoration(
@@ -163,239 +192,59 @@ class _SolutionScreenState extends State<SolutionScreen> {
   Widget _buildTabContent() {
     switch (_selectedTab) {
       case 0:
-        return _buildPenanganan();
+        return _buildDeskripsiContent();
       case 1:
-        return _buildPencegahan();
+        return _buildListContent(
+          items: widget.penanganan,
+          icon: '🌿',
+          title: 'Langkah Penanganan',
+          emptyMessage: 'Tidak ada data penanganan.',
+        );
       case 2:
-        return _buildTips();
+        return _buildListContent(
+          items: widget.penanggulangan,
+          icon: '🛡️',
+          title: 'Langkah Penanggulangan',
+          emptyMessage: 'Tidak ada data penanggulangan.',
+        );
       default:
         return const SizedBox.shrink();
     }
   }
 
-  // ── PENANGANAN ──────────────────────────────────────────────────────────────
-  Widget _buildPenanganan() {
-    return Column(
-      children: [
-        _buildSolutionCard(
-          icon: '🌿',
-          title: 'Penggunaan Pestisida Organik',
-          description:
-              'Semprotkan pestisida organik berbahan neem oil atau ekstrak bawang putih pada area yang terinfeksi.',
-          steps: [
-            RichText(
-              text: const TextSpan(
-                style: TextStyle(color: Colors.black87, fontSize: 13, height: 1.4),
-                children: [
-                  TextSpan(text: 'Campurkan '),
-                  TextSpan(
-                    text: '2 sendok makan neem oil ',
-                    style: TextStyle(color: primaryGreen, fontWeight: FontWeight.w600),
-                  ),
-                  TextSpan(text: 'dengan 1 liter air'),
-                ],
-              ),
+  // ── Konten deskripsi penyakit ──────────────────────────────────────────────
+  Widget _buildDeskripsiContent() {
+    if (widget.deskripsi.isEmpty) {
+      return Container(
+        width: double.infinity,
+        padding: const EdgeInsets.all(24),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(16),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withValues(alpha: 0.04),
+              blurRadius: 8,
+              offset: const Offset(0, 2),
             ),
-            RichText(
-              text: const TextSpan(
-                style: TextStyle(color: Colors.black87, fontSize: 13, height: 1.4),
-                children: [
-                  TextSpan(text: 'Tambahkan '),
-                  TextSpan(
-                    text: '1 tetes sabun cuci piring ',
-                    style: TextStyle(color: primaryGreen, fontWeight: FontWeight.w600),
-                  ),
-                  TextSpan(text: 'sebagai perata'),
-                ],
-              ),
-            ),
-            RichText(
-              text: const TextSpan(
-                style: TextStyle(color: Colors.black87, fontSize: 13, height: 1.4),
-                children: [
-                  TextSpan(text: 'Semprotkan pada '),
-                  TextSpan(
-                    text: 'pagi atau sore hari',
-                    style: TextStyle(color: primaryGreen, fontWeight: FontWeight.w600),
-                  ),
-                ],
-              ),
-            ),
-            RichText(
-              text: const TextSpan(
-                style: TextStyle(color: Colors.black87, fontSize: 13, height: 1.4),
-                children: [
-                  TextSpan(text: 'Ulangi setiap '),
-                  TextSpan(
-                    text: '3–5 hari ',
-                    style: TextStyle(color: primaryGreen, fontWeight: FontWeight.w600),
-                  ),
-                  TextSpan(text: 'sampai hama berkurang'),
-                ],
+          ],
+        ),
+        child: Column(
+          children: [
+            Icon(Icons.info_outline, color: Colors.grey.shade400, size: 40),
+            const SizedBox(height: 12),
+            Text(
+              'Tidak ada deskripsi penyakit.',
+              style: TextStyle(
+                color: Colors.grey.shade600,
+                fontSize: 14,
               ),
             ),
           ],
         ),
-        const SizedBox(height: 16),
-        _buildSolutionCard(
-          icon: '💊',
-          title: 'Bakterisida Kimia',
-          description:
-              'Jika serangan sudah parah, gunakan bakterisida berbahan aktif streptomisin sulfat atau tembaga hidroksida.',
-          steps: [
-            _plainStep('Larutkan bakterisida sesuai dosis pada label kemasan'),
-            _plainStep('Semprotkan merata ke seluruh bagian tanaman yang terinfeksi'),
-            _plainStep('Hindari penyemprotan saat hujan atau terik matahari'),
-          ],
-        ),
-      ],
-    );
-  }
+      );
+    }
 
-  // ── PENCEGAHAN ──────────────────────────────────────────────────────────────
-  Widget _buildPencegahan() {
-    return Column(
-      children: [
-        _buildSolutionCard(
-          icon: '🛡️',
-          title: 'Sanitasi Lahan',
-          description:
-              'Bersihkan sisa tanaman yang terinfeksi dan musnahkan agar bakteri tidak menyebar ke tanaman sehat.',
-          steps: [
-            _plainStep('Cabut dan bakar tanaman yang sudah sangat terinfeksi'),
-            _plainStep('Bersihkan gulma di sekitar area tanam secara rutin'),
-            _plainStep('Jangan biarkan air menggenang di lahan tanam'),
-          ],
-        ),
-        const SizedBox(height: 16),
-        _buildSolutionCard(
-          icon: '🌱',
-          title: 'Varietas Tahan Penyakit',
-          description:
-              'Gunakan benih varietas padi yang memiliki ketahanan tinggi terhadap hawar daun bakteri (HDB).',
-          steps: [
-            RichText(
-              text: const TextSpan(
-                style: TextStyle(color: Colors.black87, fontSize: 13, height: 1.4),
-                children: [
-                  TextSpan(text: 'Pilih varietas tahan seperti '),
-                  TextSpan(
-                    text: 'IR64, Ciherang, atau Inpari',
-                    style: TextStyle(color: primaryGreen, fontWeight: FontWeight.w600),
-                  ),
-                ],
-              ),
-            ),
-            _plainStep('Beli benih bersertifikat dari toko pertanian resmi'),
-            _plainStep('Rendam benih dalam air hangat sebelum semai untuk eliminasi patogen'),
-          ],
-        ),
-        const SizedBox(height: 16),
-        _buildSolutionCard(
-          icon: '💧',
-          title: 'Manajemen Air',
-          description:
-              'Atur irigasi dengan baik karena bakteri hawar daun mudah menyebar melalui percikan air.',
-          steps: [
-            _plainStep('Hindari irigasi berlebihan yang menyebabkan genangan'),
-            _plainStep('Gunakan sistem irigasi tetes jika memungkinkan'),
-            _plainStep('Pastikan saluran drainase berfungsi dengan baik'),
-          ],
-        ),
-      ],
-    );
-  }
-
-  // ── TIPS ────────────────────────────────────────────────────────────────────
-  Widget _buildTips() {
-    return Column(
-      children: [
-        _buildSolutionCard(
-          icon: '📅',
-          title: 'Jadwal Perawatan Rutin',
-          description:
-              'Perawatan yang konsisten akan menjaga kesehatan tanaman dan mencegah serangan penyakit berulang.',
-          steps: [
-            RichText(
-              text: const TextSpan(
-                style: TextStyle(color: Colors.black87, fontSize: 13, height: 1.4),
-                children: [
-                  TextSpan(
-                    text: 'Setiap minggu: ',
-                    style: TextStyle(fontWeight: FontWeight.w600),
-                  ),
-                  TextSpan(text: 'Periksa kondisi daun dan batang secara visual'),
-                ],
-              ),
-            ),
-            RichText(
-              text: const TextSpan(
-                style: TextStyle(color: Colors.black87, fontSize: 13, height: 1.4),
-                children: [
-                  TextSpan(
-                    text: 'Setiap 2 minggu: ',
-                    style: TextStyle(fontWeight: FontWeight.w600),
-                  ),
-                  TextSpan(text: 'Berikan pupuk nitrogen sesuai dosis'),
-                ],
-              ),
-            ),
-            RichText(
-              text: const TextSpan(
-                style: TextStyle(color: Colors.black87, fontSize: 13, height: 1.4),
-                children: [
-                  TextSpan(
-                    text: 'Setiap bulan: ',
-                    style: TextStyle(fontWeight: FontWeight.w600),
-                  ),
-                  TextSpan(text: 'Lakukan penyemprotan pestisida preventif'),
-                ],
-              ),
-            ),
-          ],
-        ),
-        const SizedBox(height: 16),
-        _buildSolutionCard(
-          icon: '🔬',
-          title: 'Pemupukan yang Tepat',
-          description:
-              'Tanaman yang mendapat nutrisi seimbang memiliki daya tahan lebih baik terhadap serangan penyakit.',
-          steps: [
-            _plainStep('Hindari pemberian nitrogen berlebihan yang melemahkan dinding sel'),
-            _plainStep('Tambahkan kalium (K) untuk memperkuat ketahanan tanaman'),
-            _plainStep('Gunakan pupuk organik kompos untuk memperbaiki struktur tanah'),
-          ],
-        ),
-        const SizedBox(height: 16),
-        _buildInfoCard(
-          icon: Icons.lightbulb_outline_rounded,
-          title: 'Tahukah Kamu?',
-          content:
-              'Hawar daun bakteri (Xanthomonas oryzae pv. oryzae) paling aktif pada suhu 25–30°C dengan kelembapan tinggi. Pemantauan rutin di musim hujan sangat dianjurkan untuk deteksi dini.',
-        ),
-      ],
-    );
-  }
-
-  // ── Helpers ─────────────────────────────────────────────────────────────────
-
-  Widget _plainStep(String text) {
-    return Text(
-      text,
-      style: const TextStyle(
-        color: Colors.black87,
-        fontSize: 13,
-        height: 1.4,
-      ),
-    );
-  }
-
-  Widget _buildSolutionCard({
-    required String icon,
-    required String title,
-    required String description,
-    required List<Widget> steps,
-  }) {
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(18),
@@ -413,7 +262,115 @@ class _SolutionScreenState extends State<SolutionScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Judul kartu
+          // Judul section
+          Row(
+            children: [
+              const Text('📋', style: TextStyle(fontSize: 22)),
+              const SizedBox(width: 10),
+              Expanded(
+                child: Text(
+                  'Deskripsi ${widget.namaPenyakit}',
+                  style: const TextStyle(
+                    color: primaryGreen,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 15,
+                  ),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 16),
+          // List paragraf deskripsi
+          ...widget.deskripsi.asMap().entries.map(
+                (entry) => Padding(
+                  padding: const EdgeInsets.only(bottom: 12),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Container(
+                        width: 8,
+                        height: 8,
+                        margin: const EdgeInsets.only(right: 12, top: 6),
+                        decoration: BoxDecoration(
+                          color: primaryGreen,
+                          borderRadius: BorderRadius.circular(4),
+                        ),
+                      ),
+                      Expanded(
+                        child: Text(
+                          entry.value,
+                          style: const TextStyle(
+                            color: Colors.black87,
+                            fontSize: 13,
+                            height: 1.5,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+        ],
+      ),
+    );
+  }
+
+  // ── Builder dinamis untuk list penanganan / penanggulangan ─────────────────
+  Widget _buildListContent({
+    required List<String> items,
+    required String icon,
+    required String title,
+    required String emptyMessage,
+  }) {
+    if (items.isEmpty) {
+      return Container(
+        width: double.infinity,
+        padding: const EdgeInsets.all(24),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(16),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withValues(alpha: 0.04),
+              blurRadius: 8,
+              offset: const Offset(0, 2),
+            ),
+          ],
+        ),
+        child: Column(
+          children: [
+            Icon(Icons.info_outline, color: Colors.grey.shade400, size: 40),
+            const SizedBox(height: 12),
+            Text(
+              emptyMessage,
+              style: TextStyle(
+                color: Colors.grey.shade600,
+                fontSize: 14,
+              ),
+            ),
+          ],
+        ),
+      );
+    }
+
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(18),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.05),
+            blurRadius: 10,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Judul section
           Row(
             children: [
               Text(icon, style: const TextStyle(fontSize: 22)),
@@ -430,104 +387,47 @@ class _SolutionScreenState extends State<SolutionScreen> {
               ),
             ],
           ),
-          const SizedBox(height: 10),
-          // Deskripsi
-          Text(
-            description,
-            style: TextStyle(
-              color: Colors.grey.shade700,
-              fontSize: 13,
-              height: 1.5,
-            ),
-          ),
-          const SizedBox(height: 14),
-          // Langkah-langkah
-          const Text(
-            'Langkah-langkah:',
-            style: TextStyle(
-              color: primaryGreen,
-              fontWeight: FontWeight.bold,
-              fontSize: 13,
-            ),
-          ),
-          const SizedBox(height: 8),
-          ...steps.asMap().entries.map(
+          const SizedBox(height: 16),
+          // List langkah-langkah
+          ...items.asMap().entries.map(
                 (entry) => Padding(
-                  padding: const EdgeInsets.only(bottom: 8),
+                  padding: const EdgeInsets.only(bottom: 12),
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Container(
-                        width: 22,
-                        height: 22,
-                        margin: const EdgeInsets.only(right: 10, top: 1),
+                        width: 26,
+                        height: 26,
+                        margin: const EdgeInsets.only(right: 12, top: 1),
                         decoration: BoxDecoration(
                           color: primaryGreen,
-                          borderRadius: BorderRadius.circular(6),
+                          borderRadius: BorderRadius.circular(8),
                         ),
                         child: Center(
                           child: Text(
                             '${entry.key + 1}',
                             style: const TextStyle(
                               color: Colors.white,
-                              fontSize: 11,
+                              fontSize: 12,
                               fontWeight: FontWeight.bold,
                             ),
                           ),
                         ),
                       ),
-                      Expanded(child: entry.value),
+                      Expanded(
+                        child: Text(
+                          entry.value,
+                          style: const TextStyle(
+                            color: Colors.black87,
+                            fontSize: 13,
+                            height: 1.5,
+                          ),
+                        ),
+                      ),
                     ],
                   ),
                 ),
               ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildInfoCard({
-    required IconData icon,
-    required String title,
-    required String content,
-  }) {
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.all(18),
-      decoration: BoxDecoration(
-        color: const Color(0xFFEAF5EE),
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: primaryGreen.withValues(alpha: 0.3)),
-      ),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Icon(icon, color: primaryGreen, size: 24),
-          const SizedBox(width: 12),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  title,
-                  style: const TextStyle(
-                    color: primaryGreen,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 14,
-                  ),
-                ),
-                const SizedBox(height: 6),
-                Text(
-                  content,
-                  style: TextStyle(
-                    color: Colors.grey.shade700,
-                    fontSize: 13,
-                    height: 1.5,
-                  ),
-                ),
-              ],
-            ),
-          ),
         ],
       ),
     );

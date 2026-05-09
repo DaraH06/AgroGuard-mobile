@@ -27,10 +27,11 @@ class AgroGuardHeader extends StatelessWidget {
               color: Colors.white,
               borderRadius: BorderRadius.circular(12),
             ),
-            child: const Icon(
-              Icons.energy_savings_leaf,
-              color: Colors.brown,
-              size: 28,
+            child: ClipRRect(
+              borderRadius: BorderRadius.all(Radius.circular(12)),
+              child: Image.asset('assets/icon/ikon-agro.png',
+              fit: BoxFit.cover,
+              ),
             ),
           ),
           const SizedBox(width: 16),

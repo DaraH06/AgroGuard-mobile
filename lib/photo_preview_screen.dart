@@ -4,6 +4,8 @@ import 'widgets/animated_bottom_toggle.dart';
 import 'widgets/agro_info_banner.dart';
 import 'services/upload_service.dart';
 import 'models/upload_result.dart';
+import 'result_screen.dart';
+import 'kondisi_screen.dart';
 import 'dart:io';
 
 class PhotoPreviewScreen extends StatefulWidget {
@@ -22,11 +24,28 @@ class _PhotoPreviewScreenState extends State<PhotoPreviewScreen> {
   static const Color primaryGreen = Color(0xFF136B53);
   static const Color bgLightGreen = Color(0xFFF4FBF5);
 
-  void _onToggle(bool scanActive) {
+  void _onToggle(bool scanActive) async {
     setState(() => isScanActive = scanActive);
+    await Future.delayed(const Duration(milliseconds: 300));
+    if (!mounted) return;
+
+    if (scanActive) {
+      Navigator.popUntil(context, (route) => route.isFirst);
+    } else {
+      Navigator.pushAndRemoveUntil(
+        context,
+        PageRouteBuilder(
+          pageBuilder: (context, animation1, animation2) =>
+              const KondisiScreen(),
+          transitionDuration: Duration.zero,
+          reverseTransitionDuration: Duration.zero,
+        ),
+        (route) => route.isFirst,
+      );
+    }
   }
 
-  // Upload foto ke Laravel POST /api/upload
+  // Upload foto ke Laravel POST /api/upload lalu navigasi ke ResultScreen
   Future<void> _doUpload() async {
     if (widget.imagePath == null) return;
 
@@ -36,7 +55,23 @@ class _PhotoPreviewScreenState extends State<PhotoPreviewScreen> {
       final UploadResult result = await UploadService.uploadImage(widget.imagePath!);
       if (!mounted) return;
       setState(() => _isUploading = false);
-      _showSuccessDialog(result);
+
+      // Navigasi ke ResultScreen dengan data analisis
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (_) => ResultScreen(
+            imagePath: widget.imagePath,
+            namaPenyakit: result.namaPenyakit,
+            topConfidence: result.topConfidence,
+            tingkatKeyakinan: result.tingkatKeyakinan,
+            deskripsi: result.deskripsi,
+            penanganan: result.penanganan,
+            penanggulangan: result.penanggulangan,
+            isHealthy: result.isHealthy,
+          ),
+        ),
+      );
     } catch (e) {
       if (!mounted) return;
       setState(() => _isUploading = false);
@@ -48,92 +83,6 @@ class _PhotoPreviewScreenState extends State<PhotoPreviewScreen> {
         ),
       );
     }
-  }
-
-  void _showSuccessDialog(UploadResult result) {
-    if (result.hasil.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Data upload tidak tersedia'),
-          backgroundColor: Colors.red,
-        ),
-      );
-      return;
-    }
-
-    final data = result.hasil.first as Map<String, dynamic>;
-    final filename = data['original_filename'] ?? 'Unknown';
-    final id = data['id'] ?? 'N/A';
-
-    // Prepare extraction display if present
-    final extraction = result.extraction;
-    List<dynamic>? features;
-    if (extraction != null && extraction['status'] == true) {
-      final raw = extraction['hasil'];
-      if (raw is List) features = raw;
-    }
-
-    showDialog(
-      context: context,
-      builder: (_) => AlertDialog(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-        title: Row(
-          children: [
-            Icon(Icons.check_circle_rounded, color: Colors.green.shade600),
-            const SizedBox(width: 8),
-            const Text('Upload Berhasil!'),
-          ],
-        ),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            _dialogRow('File', filename.toString()),
-            const SizedBox(height: 8),
-            _dialogRow('ID', id.toString()),
-              const SizedBox(height: 8),
-              // Show extraction features when available
-              if (features != null) ...[
-                const SizedBox(height: 8),
-                Text('Hasil Ekstraksi:', style: TextStyle(fontWeight: FontWeight.w600)),
-                const SizedBox(height: 6),
-                _dialogRow('R (mean)', features.length > 0 ? features[0].toString() : '-'),
-                _dialogRow('G (mean)', features.length > 1 ? features[1].toString() : '-'),
-                _dialogRow('B (mean)', features.length > 2 ? features[2].toString() : '-'),
-                _dialogRow('G_std', features.length > 3 ? features[3].toString() : '-'),
-                _dialogRow('ExG', features.length > 4 ? features[4].toString() : '-'),
-              ],
-          ],
-        ),
-        actions: [
-          TextButton(
-            onPressed: () {
-              Navigator.pop(context); // tutup dialog
-              Navigator.pop(context); // kembali ke home
-            },
-            child: const Text('Selesai', style: TextStyle(color: primaryGreen)),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _dialogRow(String label, String value) {
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text('$label: ',
-            style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 13)),
-        Expanded(
-          child: Text(
-            value,
-            style: TextStyle(color: Colors.grey.shade700, fontSize: 13),
-            maxLines: 2,
-            overflow: TextOverflow.ellipsis,
-          ),
-        ),
-      ],
-    );
   }
 
   @override

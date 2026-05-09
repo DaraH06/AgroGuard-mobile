@@ -27,7 +27,7 @@ class _AnimatedBottomToggleState extends State<AnimatedBottomToggle>
     super.initState();
     _controller = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 350),
+      duration: const Duration(milliseconds: 200),
     );
 
     _scaleAnimation = Tween<double>(begin: 0.95, end: 1).animate(
@@ -59,8 +59,24 @@ class _AnimatedBottomToggleState extends State<AnimatedBottomToggle>
     super.dispose();
   }
 
+  bool _isProcessing = false;
+
   void _handleTap(bool scanActive) {
+    if (_isProcessing || scanActive == widget.isScanActive) return;
+
+    setState(() {
+      _isProcessing = true;
+    });
+
     widget.onToggle(scanActive);
+
+    Future.delayed(const Duration(milliseconds: 250), () {
+      if (mounted) {
+        setState(() {
+          _isProcessing = false;
+        });
+      }
+    });
   }
 
   @override
