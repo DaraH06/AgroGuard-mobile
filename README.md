@@ -1,7 +1,7 @@
 <div align="center">
   <img src="assets/icon/agro1.png" alt="AgroGuard Logo" width="150"/>
   <h1>🌾 AgroGuard 📱</h1>
-  <p><em>Aplikasi Android Pendeteksi Penyakit pada Tanaman Padi Berbasis Machine Learning.</em></p>
+  <p><em>Aplikasi Android Pendeteksi Penyakit pada Tanaman Padi.</em></p>
 
 [![Flutter](https://img.shields.io/badge/Flutter-^3.10.1-02569B?logo=flutter&logoColor=white)](https://flutter.dev/)
 [![Dart](https://img.shields.io/badge/Dart-3.0-0175C2?logo=dart&logoColor=white)](https://dart.dev/)
@@ -54,13 +54,33 @@ Ikuti langkah-langkah berikut untuk menjalankan projek di lingkungan lokal Anda:
   <img src="assets/Screenshots/hasil.jpeg" width="230" alt="Hasil Analisis"/>
 </div>
 
-## 🤝 Kontribusi
+## 🤝 Kontributor
 
-Kontribusi selalu terbuka! Jika Anda memiliki saran atau menemukan bug, silakan buka [Issues](https://github.com/Darah0/AgroGuard-mobile/issues) atau ajukan _Pull Request_.
+Terima kasih kepada orang-orang hebat ini yang telah berkontribusi:
+
+<!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
+<table>
+  <tr>
+    <td align="center">
+      <a href="https://github.com/Darah06">
+        <img src="https://github.com/Darah06.png?v=4" width="100px;" alt="Darah06"/><br />
+        <sub><b>Darah06</b></sub>
+      </a><br />
+      💻 🎨 📖
+    </td>
+    <td align="center">
+      <a href="https://github.com/inihilmyloh">
+        <img src="https://github.com/inihilmyloh.png?v=4" width="100px;" alt="inihilmyloh"/><br />
+        <sub><b>inihilmyloh</b></sub>
+      </a><br />
+      💻 🎨 📖
+    </td>
+  </tr>
+</table>
 
 ## 📄 Lisensi
 
-Didistribusikan di bawah Lisensi MIT. Lihat file `LICENSE` untuk informasi lebih lanjut.
+Proyek ini dilisensikan di bawah **MIT License** - lihat file [LICENSE](LICENSE) untuk detail lebih lanjut.
 
 ---
 
