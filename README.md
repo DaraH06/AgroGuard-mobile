@@ -59,19 +59,24 @@ Ikuti langkah-langkah berikut untuk menjalankan projek di lingkungan lokal Anda:
 Terima kasih kepada anggota kelompok saya yang telah berkontribusi:
 
 <!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
-<div align="center">
-  <a href="https://github.com/Darah06" style="text-decoration:none;">
-    <img src="https://images.weserv.nl/?url=github.com/Darah06.png&w=100&h=100&fit=cover&mask=circle" width="100" style="border-radius:50%;" alt="Darah06"/><br />
-    <sub><b>Darah06</b></sub><br />
-    <sub>💻 🎨 📖</sub>
-  </a>
-  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-  <a href="https://github.com/inihilmyloh" style="text-decoration:none;">
-    <img src="https://images.weserv.nl/?url=github.com/inihilmyloh.png&w=100&h=100&fit=cover&mask=circle" width="100" alt="inihilmyloh"/><br />
-    <sub><b>inihilmyloh</b></sub><br />
-    <sub>💻 🎨 📖</sub>
-  </a>
-</div>
+<table align="center">
+  <tr>
+    <td align="center" width="160">
+      <a href="https://github.com/Darah06">
+        <img src="https://images.weserv.nl/?url=github.com/Darah06.png&w=120&h=120&fit=cover&mask=circle" width="100" alt="Darah06"/><br />
+        <sub><b>Darah06</b></sub>
+      </a><br />
+      <sub>💻 🎨 📖</sub>
+    </td>
+    <td align="center" width="160">
+      <a href="https://github.com/inihilmyloh">
+        <img src="https://images.weserv.nl/?url=github.com/inihilmyloh.png&w=120&h=120&fit=cover&mask=circle" width="100" alt="inihilmyloh"/><br />
+        <sub><b>inihilmyloh</b></sub>
+      </a><br />
+      <sub>💻 🎨 📖</sub>
+    </td>
+  </tr>
+</table>
 
 ## 📄 Lisensi
 
