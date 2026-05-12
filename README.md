@@ -5,8 +5,8 @@
 
 [![Flutter](https://img.shields.io/badge/Flutter-^3.10.1-02569B?logo=flutter&logoColor=white)](https://flutter.dev/)
 [![Dart](https://img.shields.io/badge/Dart-3.0-0175C2?logo=dart&logoColor=white)](https://dart.dev/)
-[![Repo](https://img.shields.io/badge/Repository-GitHub-181717?logo=github)](https://github.com/Darah0/AgroGuard-mobile)
-[![License](https://img.shields.io/badge/License-MIT-green.svg)](https://github.com/Darah0/AgroGuard-mobile/blob/main/LICENSE)
+[![Repo](https://img.shields.io/badge/Repository-GitHub-181717?logo=github)](https://github.com/Darah06/AgroGuard-mobile)
+[![License](https://img.shields.io/badge/License-MIT-green.svg)](https://github.com/Darah06/AgroGuard-mobile/blob/main/LICENSE)
 
 </div>
 
@@ -56,12 +56,12 @@ Ikuti langkah-langkah berikut untuk menjalankan projek di lingkungan lokal Anda:
 
 ## 🤝 Kontributor
 
-Terima kasih kepada orang-orang hebat ini yang telah berkontribusi:
+Terima kasih kepada anggota kelompok saya yang telah berkontribusi:
 
 <!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
 <div align="center">
   <a href="https://github.com/Darah06" style="text-decoration:none;">
-    <img src="https://images.weserv.nl/?url=github.com/Darah06.png&w=100&h=100&fit=cover&mask=circle" width="100" alt="Darah06"/><br />
+    <img src="https://images.weserv.nl/?url=github.com/Darah06.png&w=100&h=100&fit=cover&mask=circle" width="100" style="border-radius:50%;" alt="Darah06"/><br />
     <sub><b>Darah06</b></sub><br />
     <sub>💻 🎨 📖</sub>
   </a>
