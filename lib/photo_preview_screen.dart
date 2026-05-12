@@ -63,7 +63,6 @@ class _PhotoPreviewScreenState extends State<PhotoPreviewScreen> {
       // Get current location
       Position position = await Geolocator.getCurrentPosition(
         desiredAccuracy: LocationAccuracy.high,
-        // Optional timeout to prevent hanging forever
         timeLimit: const Duration(seconds: 10),
       );
 
@@ -78,25 +77,24 @@ class _PhotoPreviewScreenState extends State<PhotoPreviewScreen> {
 
       if (placemarks.isNotEmpty) {
         Placemark place = placemarks.first;
-        provinsi = place.administrativeArea; // e.g., Jawa Timur
-        kabupaten = place.subAdministrativeArea; // e.g., Kabupaten Jember
-        kecamatan = place.locality; // e.g., Sumbersari
-        
-        // Clean up "Kabupaten" or "Kota" prefix if you want it cleaner
+        provinsi = place.administrativeArea;
+        kabupaten = place.subAdministrativeArea;
+        kecamatan = place.locality;
+
+        // Clean up prefix
         if (kabupaten != null && kabupaten.startsWith('Kabupaten ')) {
           kabupaten = kabupaten.replaceFirst('Kabupaten ', '');
         }
         if (kabupaten != null && kabupaten.startsWith('Kota ')) {
           kabupaten = kabupaten.replaceFirst('Kota ', '');
         }
-        // Clean up "Kecamatan" prefix agar konsisten dengan data di database
         if (kecamatan != null && kecamatan.startsWith('Kecamatan ')) {
           kecamatan = kecamatan.replaceFirst('Kecamatan ', '');
         }
       }
     } catch (e) {
-      // Ignore location errors to not block the upload
       debugPrint("Gagal mendapatkan lokasi: $e");
+      // Tetap lanjut upload meskipun lokasi gagal
     }
 
     try {
@@ -108,10 +106,11 @@ class _PhotoPreviewScreenState extends State<PhotoPreviewScreen> {
         latitude: latitude,
         longitude: longitude,
       );
+
       if (!mounted) return;
       setState(() => _isUploading = false);
 
-      // Navigasi ke ResultScreen dengan data analisis
+      // Navigasi ke ResultScreen
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(
@@ -130,11 +129,33 @@ class _PhotoPreviewScreenState extends State<PhotoPreviewScreen> {
     } catch (e) {
       if (!mounted) return;
       setState(() => _isUploading = false);
+
+      String errorMsg = e.toString().replaceFirst('Exception: ', '');
+
+      // === PENANGANAN KHUSUS INTERNET LAMBAT / TIMEOUT ===
+      if (errorMsg.contains('lambat') ||
+          errorMsg.contains('Timeout') ||
+          errorMsg.toLowerCase().contains('timeout')) {
+        errorMsg =
+            'Koneksi internet terlalu lambat.\nMohon coba lagi dengan sinyal yang lebih baik.';
+      } else if (errorMsg.contains('terhubung') ||
+          errorMsg.contains('Socket') ||
+          errorMsg.contains('koneksi')) {
+        errorMsg =
+            'Tidak ada koneksi internet.\nPeriksa WiFi atau data seluler Anda.';
+      }
+
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text(e.toString().replaceFirst('Exception: ', '')),
+          content: Text(errorMsg),
           backgroundColor: Colors.red.shade400,
           behavior: SnackBarBehavior.floating,
+          duration: const Duration(seconds: 6),
+          action: SnackBarAction(
+            label: 'Coba Lagi',
+            textColor: Colors.white,
+            onPressed: _doUpload, // Tombol Retry
+          ),
         ),
       );
     }

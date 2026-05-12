@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'dart:async'; // ← Tambahkan ini untuk TimeoutException
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import '../models/upload_result.dart';
 
@@ -10,7 +11,6 @@ class UploadService {
   static final String _baseUrl = 'http://$_host/api';
 
   /// Upload gambar ke Laravel POST /api/upload
-  /// Field multipart: 'image'
   static Future<UploadResult> uploadImage(
     String filePath, {
     String? provinsi,
@@ -23,18 +23,20 @@ class UploadService {
     final request = http.MultipartRequest('POST', uri);
 
     request.files.add(await http.MultipartFile.fromPath('image', filePath));
+
     if (provinsi != null) request.fields['provinsi'] = provinsi;
     if (kabupaten != null) request.fields['kabupaten'] = kabupaten;
     if (kecamatan != null) request.fields['kecamatan'] = kecamatan;
     if (latitude != null) request.fields['latitude'] = latitude.toString();
     if (longitude != null) request.fields['longitude'] = longitude.toString();
+
     request.headers['Accept'] = 'application/json';
 
     try {
       final streamed = await request.send().timeout(
-        const Duration(seconds: 20),
-        onTimeout: () => throw Exception(
-          'Request timeout — pastikan Laravel server berjalan di $_host',
+        const Duration(seconds: 35), // Diperpanjang untuk koneksi lambat
+        onTimeout: () => throw TimeoutException(
+          'Koneksi internet terlalu lambat. Coba lagi dengan sinyal yang lebih baik.',
         ),
       );
 
@@ -45,17 +47,19 @@ class UploadService {
         return UploadResult.fromJson(body);
       } else {
         final message = body['message']?.toString() ?? 'Upload gagal';
-        final error = body['error']?.toString();
-        final errors = body['errors']?.toString();
-        final detail = error ?? errors;
-        throw Exception(detail != null ? '$message: $detail' : message);
+        final error = body['error']?.toString() ?? body['errors']?.toString();
+        throw Exception(error != null ? '$message: $error' : message);
       }
+    } on TimeoutException catch (e) {
+      throw Exception(e.message); // Pesan timeout yang user-friendly
     } on SocketException {
       throw Exception(
-        'Tidak dapat terhubung ke server. Pastikan Laravel berjalan di $_host',
+        'Tidak dapat terhubung ke server. Periksa koneksi internet Anda.',
       );
     } on FormatException {
       throw Exception('Respons dari server tidak valid');
+    } catch (e) {
+      throw Exception('Terjadi kesalahan tidak terduga: ${e.toString()}');
     }
   }
 }
