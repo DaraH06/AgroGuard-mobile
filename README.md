@@ -43,7 +43,7 @@ Untuk pengalaman terbaik saat menggunakan AgroGuard Mobile di lapangan:
 | Komponen        | Minimum             | Rekomendasi               |
 | --------------- | ------------------- | ------------------------- |
 | **OS**          | Android 10.0 (Pie)  | Android 14+ (Q)           |
-| **RAM**         | 4 GB                | 4 GB+                     |
+| **RAM**         | 4 GB                | 8 GB+                     |
 | **Penyimpanan** | 100 MB ruang kosong | 500 MB+ ruang kosong      |
 | **Kamera**      | 12 MP               | 50 MP+ (dengan autofocus) |
 | **GPS**         | GPS bawaan          | A-GPS / GLONASS           |
