@@ -56,6 +56,8 @@ class _PhotoPreviewScreenState extends State<PhotoPreviewScreen> {
     String? provinsi;
     String? kabupaten;
     String? kecamatan;
+    double? latitude;
+    double? longitude;
 
     try {
       // Get current location
@@ -64,6 +66,9 @@ class _PhotoPreviewScreenState extends State<PhotoPreviewScreen> {
         // Optional timeout to prevent hanging forever
         timeLimit: const Duration(seconds: 10),
       );
+
+      latitude = position.latitude;
+      longitude = position.longitude;
 
       // Get address from coordinates
       List<Placemark> placemarks = await placemarkFromCoordinates(
@@ -100,6 +105,8 @@ class _PhotoPreviewScreenState extends State<PhotoPreviewScreen> {
         provinsi: provinsi,
         kabupaten: kabupaten,
         kecamatan: kecamatan,
+        latitude: latitude,
+        longitude: longitude,
       );
       if (!mounted) return;
       setState(() => _isUploading = false);

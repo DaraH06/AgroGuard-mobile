@@ -16,6 +16,8 @@ class UploadService {
     String? provinsi,
     String? kabupaten,
     String? kecamatan,
+    double? latitude,
+    double? longitude,
   }) async {
     final uri = Uri.parse('$_baseUrl/upload');
     final request = http.MultipartRequest('POST', uri);
@@ -24,6 +26,8 @@ class UploadService {
     if (provinsi != null) request.fields['provinsi'] = provinsi;
     if (kabupaten != null) request.fields['kabupaten'] = kabupaten;
     if (kecamatan != null) request.fields['kecamatan'] = kecamatan;
+    if (latitude != null) request.fields['latitude'] = latitude.toString();
+    if (longitude != null) request.fields['longitude'] = longitude.toString();
     request.headers['Accept'] = 'application/json';
 
     try {
