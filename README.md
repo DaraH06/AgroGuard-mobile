@@ -60,24 +60,17 @@ Terima kasih kepada orang-orang hebat ini yang telah berkontribusi:
 
 <!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
 <div align="center">
-  <table>
-    <tr>
-      <td align="center">
-        <a href="https://github.com/Darah06">
-          <img src="https://github.com/Darah06.png?v=4" width="100" style="border-radius: 50%;" alt="Darah06"/><br />
-          <sub><b>Darah06</b></sub>
-        </a><br />
-        💻 🎨 📖
-      </td>
-      <td align="center">
-        <a href="https://github.com/inihilmyloh">
-          <img src="https://github.com/inihilmyloh.png?v=4" width="100" style="border-radius: 50%;" alt="inihilmyloh"/><br />
-          <sub><b>inihilmyloh</b></sub>
-        </a><br />
-        💻 🎨 📖
-      </td>
-    </tr>
-  </table>
+  <a href="https://github.com/Darah06" style="text-decoration:none;">
+    <img src="https://images.weserv.nl/?url=github.com/Darah06.png&w=100&h=100&fit=cover&mask=circle" width="100" alt="Darah06"/><br />
+    <sub><b>Darah06</b></sub><br />
+    <sub>💻 🎨 📖</sub>
+  </a>
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+  <a href="https://github.com/inihilmyloh" style="text-decoration:none;">
+    <img src="https://images.weserv.nl/?url=github.com/inihilmyloh.png&w=100&h=100&fit=cover&mask=circle" width="100" alt="inihilmyloh"/><br />
+    <sub><b>inihilmyloh</b></sub><br />
+    <sub>💻 🎨 📖</sub>
+  </a>
 </div>
 
 ## 📄 Lisensi
