@@ -6,7 +6,7 @@
 [![Flutter](https://img.shields.io/badge/Flutter-^3.10.1-02569B?logo=flutter&logoColor=white)](https://flutter.dev/)
 [![Dart](https://img.shields.io/badge/Dart-3.0-0175C2?logo=dart&logoColor=white)](https://dart.dev/)
 [![Repo](https://img.shields.io/badge/Repository-GitHub-181717?logo=github)](https://github.com/Darah06/AgroGuard-mobile)
-[![License](https://img.shields.io/badge/License-MIT-green.svg)](https://github.com/Darah06/AgroGuard-mobile/blob/main/LICENSE)
+[![License](https://img.shields.io/badge/License-MIT-green.svg)](https://github.com/Darah06/AgroGuard-mobile/LICENSE)
 
 </div>
 
