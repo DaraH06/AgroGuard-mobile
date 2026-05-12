@@ -49,7 +49,7 @@ class AgroGuardHeader extends StatelessWidget {
                 ),
                 const SizedBox(height: 4),
                 Text(
-                  'Deteksi Penyakit dan Hama Padi &\nJagung dengan AI',
+                  'Sistem Deteksi Penyakit Tanaman Padi Berbasis AI',
                   style: TextStyle(
                     color: Colors.white.withValues(alpha: 0.9),
                     fontSize: 12,

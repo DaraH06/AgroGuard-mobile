@@ -185,7 +185,7 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
               const SizedBox(height: 12),
               Text(
-                'Foto daun atau hama pada tanaman\npadi atau jagung',
+                'Foto daun atau hama pada tanaman padi',
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   color: Colors.grey.shade600,

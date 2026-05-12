@@ -36,7 +36,7 @@ class AgroInfoBanner extends StatelessWidget {
               ),
               TextSpan(
                 text:
-                    'menggunakan AI Deteksi penyakit atau hama pada tanaman Padi dan Jagung',
+                    'menggunakan akses internet untuk mendeteksi penyakit pada tanaman Padi',
               ),
             ],
           ),
