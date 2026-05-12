@@ -1,12 +1,24 @@
 import 'package:flutter/material.dart';
 import 'widgets/agroguard_header.dart';
 import 'widgets/animated_bottom_toggle.dart';
+import 'widgets/solution_tab_content.dart';
 import 'kondisi_screen.dart';
 
+/// Halaman Solusi — menampilkan deskripsi penyakit, penanganan, dan penanggulangan.
+/// Muncul setelah user menekan tombol "Lihat Solusi" di ResultScreen.
+/// Data deskripsi, penanganan, penanggulangan dikirim dari ResultScreen
+/// yang sebelumnya didapat dari API Laravel (collection 'penyakit' di MongoDB).
 class SolutionScreen extends StatefulWidget {
+  /// Nama penyakit yang terdeteksi (contoh: "Bacterial Leaf Blight")
   final String namaPenyakit;
+
+  /// List paragraf deskripsi penyakit dari database
   final List<String> deskripsi;
+
+  /// List langkah-langkah penanganan penyakit
   final List<String> penanganan;
+
+  /// List langkah-langkah penanggulangan/pencegahan penyakit
   final List<String> penanggulangan;
 
   const SolutionScreen({
@@ -23,12 +35,17 @@ class SolutionScreen extends StatefulWidget {
 
 class _SolutionScreenState extends State<SolutionScreen> {
   bool isScanActive = true;
-  int _selectedTab = 0; // 0: Deskripsi, 1: Penanganan, 2: Pencegahan
+
+  /// Index tab yang aktif: 0 = Deskripsi, 1 = Penanganan, 2 = Pencegahan
+  int _selectedTab = 0;
 
   static const Color primaryGreen = Color(0xFF136B53);
   static const Color bgLightGreen = Color(0xFFF4FBF5);
   static const Color cardBg = Color(0xFFEAF5EE);
 
+  /// Callback dari AnimatedBottomToggle.
+  /// - Jika toggle ke "Scan" → kembali ke HomeScreen (popUntil first route)
+  /// - Jika toggle ke "Kondisi" → navigasi ke KondisiScreen tanpa animasi
   void _onToggle(bool scanActive) async {
     setState(() => isScanActive = scanActive);
     await Future.delayed(const Duration(milliseconds: 300));
@@ -83,7 +100,8 @@ class _SolutionScreenState extends State<SolutionScreen> {
     );
   }
 
-  // ── Kartu header berisi nama penyakit ───────────────────────────────────────
+  /// Card header di bagian atas halaman — menampilkan ikon shield + nama penyakit
+  /// dan teks petunjuk untuk mengikuti panduan solusi.
   Widget _buildSolutionHeader() {
     return Container(
       width: double.infinity,
@@ -138,7 +156,9 @@ class _SolutionScreenState extends State<SolutionScreen> {
     );
   }
 
-  // ── Tab bar: Deskripsi / Penanganan / Pencegahan ───────────────────────────
+  /// Tab bar dengan 3 pilihan: Deskripsi, Penanganan, Pencegahan.
+  /// Tab yang aktif diberi background hijau, yang tidak aktif transparan.
+  /// Menggunakan AnimatedContainer untuk transisi warna yang halus.
   Widget _buildTabBar() {
     const tabs = ['Deskripsi', 'Penanganan', 'Pencegahan'];
     return Container(
@@ -188,248 +208,37 @@ class _SolutionScreenState extends State<SolutionScreen> {
     );
   }
 
-  // ── Isi konten berdasarkan tab aktif ───────────────────────────────────────
+  /// Menampilkan konten sesuai tab yang sedang aktif.
+  /// Menggunakan widget SolutionTabContent yang sudah dipisah ke file terpisah.
+  /// - Tab 0: Deskripsi penyakit (bullet point)
+  /// - Tab 1: Langkah penanganan (bernomor)
+  /// - Tab 2: Langkah penanggulangan (bernomor)
   Widget _buildTabContent() {
     switch (_selectedTab) {
       case 0:
-        return _buildDeskripsiContent();
+        return SolutionTabContent(
+          title: 'Deskripsi ${widget.namaPenyakit}',
+          icon: '📋',
+          items: widget.deskripsi,
+          emptyMessage: 'Tidak ada deskripsi penyakit.',
+          useBullet: true,
+        );
       case 1:
-        return _buildListContent(
-          items: widget.penanganan,
-          icon: '🌿',
+        return SolutionTabContent(
           title: 'Langkah Penanganan',
+          icon: '🌿',
+          items: widget.penanganan,
           emptyMessage: 'Tidak ada data penanganan.',
         );
       case 2:
-        return _buildListContent(
-          items: widget.penanggulangan,
-          icon: '🛡️',
+        return SolutionTabContent(
           title: 'Langkah Penanggulangan',
+          icon: '🛡️',
+          items: widget.penanggulangan,
           emptyMessage: 'Tidak ada data penanggulangan.',
         );
       default:
         return const SizedBox.shrink();
     }
-  }
-
-  // ── Konten deskripsi penyakit ──────────────────────────────────────────────
-  Widget _buildDeskripsiContent() {
-    if (widget.deskripsi.isEmpty) {
-      return Container(
-        width: double.infinity,
-        padding: const EdgeInsets.all(24),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(16),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withValues(alpha: 0.04),
-              blurRadius: 8,
-              offset: const Offset(0, 2),
-            ),
-          ],
-        ),
-        child: Column(
-          children: [
-            Icon(Icons.info_outline, color: Colors.grey.shade400, size: 40),
-            const SizedBox(height: 12),
-            Text(
-              'Tidak ada deskripsi penyakit.',
-              style: TextStyle(
-                color: Colors.grey.shade600,
-                fontSize: 14,
-              ),
-            ),
-          ],
-        ),
-      );
-    }
-
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.all(18),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.05),
-            blurRadius: 10,
-            offset: const Offset(0, 2),
-          ),
-        ],
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Judul section
-          Row(
-            children: [
-              const Text('📋', style: TextStyle(fontSize: 22)),
-              const SizedBox(width: 10),
-              Expanded(
-                child: Text(
-                  'Deskripsi ${widget.namaPenyakit}',
-                  style: const TextStyle(
-                    color: primaryGreen,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 15,
-                  ),
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 16),
-          // List paragraf deskripsi
-          ...widget.deskripsi.asMap().entries.map(
-                (entry) => Padding(
-                  padding: const EdgeInsets.only(bottom: 12),
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Container(
-                        width: 8,
-                        height: 8,
-                        margin: const EdgeInsets.only(right: 12, top: 6),
-                        decoration: BoxDecoration(
-                          color: primaryGreen,
-                          borderRadius: BorderRadius.circular(4),
-                        ),
-                      ),
-                      Expanded(
-                        child: Text(
-                          entry.value,
-                          style: const TextStyle(
-                            color: Colors.black87,
-                            fontSize: 13,
-                            height: 1.5,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-        ],
-      ),
-    );
-  }
-
-  // ── Builder dinamis untuk list penanganan / penanggulangan ─────────────────
-  Widget _buildListContent({
-    required List<String> items,
-    required String icon,
-    required String title,
-    required String emptyMessage,
-  }) {
-    if (items.isEmpty) {
-      return Container(
-        width: double.infinity,
-        padding: const EdgeInsets.all(24),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(16),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withValues(alpha: 0.04),
-              blurRadius: 8,
-              offset: const Offset(0, 2),
-            ),
-          ],
-        ),
-        child: Column(
-          children: [
-            Icon(Icons.info_outline, color: Colors.grey.shade400, size: 40),
-            const SizedBox(height: 12),
-            Text(
-              emptyMessage,
-              style: TextStyle(
-                color: Colors.grey.shade600,
-                fontSize: 14,
-              ),
-            ),
-          ],
-        ),
-      );
-    }
-
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.all(18),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.05),
-            blurRadius: 10,
-            offset: const Offset(0, 2),
-          ),
-        ],
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Judul section
-          Row(
-            children: [
-              Text(icon, style: const TextStyle(fontSize: 22)),
-              const SizedBox(width: 10),
-              Expanded(
-                child: Text(
-                  title,
-                  style: const TextStyle(
-                    color: primaryGreen,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 15,
-                  ),
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 16),
-          // List langkah-langkah
-          ...items.asMap().entries.map(
-                (entry) => Padding(
-                  padding: const EdgeInsets.only(bottom: 12),
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Container(
-                        width: 26,
-                        height: 26,
-                        margin: const EdgeInsets.only(right: 12, top: 1),
-                        decoration: BoxDecoration(
-                          color: primaryGreen,
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                        child: Center(
-                          child: Text(
-                            '${entry.key + 1}',
-                            style: const TextStyle(
-                              color: Colors.white,
-                              fontSize: 12,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
-                      ),
-                      Expanded(
-                        child: Text(
-                          entry.value,
-                          style: const TextStyle(
-                            color: Colors.black87,
-                            fontSize: 13,
-                            height: 1.5,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-        ],
-      ),
-    );
   }
 }
