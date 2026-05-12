@@ -46,47 +46,24 @@ Follow these steps to get a local copy up and running.
 - Android Studio / Xcode (for emulation/building)
 - AgroGuard Backend Server (Laravel) running locally or hosted
 
-### Installation
-
-1. **Clone the repository**
-   ```sh
-   git clone https://github.com/yourusername/AgroGuard.git
-   cd AgroGuard-mobile
-   ```
-
-2. **Install Flutter packages**
-   ```sh
-   flutter pub get
-   ```
-
-3. **Configure Environment Variables**
-   Create a `.env` file in the root directory (same level as `pubspec.yaml`) and add your backend URL:
-   ```env
-   API_BASE_URL=http://your-laravel-backend-ip:8000/api
-   ```
-
-4. **Run the app**
-   ```sh
-   flutter run
-   ```
-
 ## 📱 Screenshots
 
 <div align="center">
-  <img src="https://via.placeholder.com/250x500.png?text=Splash+Screen" width="200" alt="Splash"/> &nbsp;
-  <img src="https://via.placeholder.com/250x500.png?text=Home+Screen" width="200" alt="Home"/> &nbsp;
-  <img src="https://via.placeholder.com/250x500.png?text=Upload+Screen" width="200" alt="Upload"/>
+  <img src="assets/Screenshots/home.jpeg" width="200" alt="Home"/> &nbsp;
+  <img src="assets/Screenshots/kondisi.jpeg" width="200" alt="Kondisi"/> &nbsp;
+  <img src="assets/Screenshots/hasil.jpeg" width="200" alt="Hasil"/>
 </div>
 
 ## 🤝 Contributing
 
-Contributions, issues, and feature requests are welcome! Feel free to check the [issues page](https://github.com/yourusername/AgroGuard/issues).
+Contributions, issues, and feature requests are welcome! Feel free to check the [issues page](https://github.com/Darah0/AgroGuard/issues).
 
 ## 📄 License
 
 Distributed under the MIT License. See `LICENSE` for more information.
 
 ---
+
 <div align="center">
   <i>Built with ❤️ by the AgroGuard Team for a greener future.</i>
 </div>
