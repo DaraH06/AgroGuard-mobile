@@ -7,6 +7,8 @@ import 'models/upload_result.dart';
 import 'result_screen.dart';
 import 'kondisi_screen.dart';
 import 'dart:io';
+import 'package:geolocator/geolocator.dart';
+import 'package:geocoding/geocoding.dart';
 
 class PhotoPreviewScreen extends StatefulWidget {
   final String? imagePath;
@@ -51,8 +53,54 @@ class _PhotoPreviewScreenState extends State<PhotoPreviewScreen> {
 
     setState(() => _isUploading = true);
 
+    String? provinsi;
+    String? kabupaten;
+    String? kecamatan;
+
     try {
-      final UploadResult result = await UploadService.uploadImage(widget.imagePath!);
+      // Get current location
+      Position position = await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.high,
+        // Optional timeout to prevent hanging forever
+        timeLimit: const Duration(seconds: 10),
+      );
+
+      // Get address from coordinates
+      List<Placemark> placemarks = await placemarkFromCoordinates(
+        position.latitude,
+        position.longitude,
+      );
+
+      if (placemarks.isNotEmpty) {
+        Placemark place = placemarks.first;
+        provinsi = place.administrativeArea; // e.g., Jawa Timur
+        kabupaten = place.subAdministrativeArea; // e.g., Kabupaten Jember
+        kecamatan = place.locality; // e.g., Sumbersari
+        
+        // Clean up "Kabupaten" or "Kota" prefix if you want it cleaner
+        if (kabupaten != null && kabupaten.startsWith('Kabupaten ')) {
+          kabupaten = kabupaten.replaceFirst('Kabupaten ', '');
+        }
+        if (kabupaten != null && kabupaten.startsWith('Kota ')) {
+          kabupaten = kabupaten.replaceFirst('Kota ', '');
+        }
+        // Clean up "Kecamatan" prefix agar konsisten dengan data di database
+        if (kecamatan != null && kecamatan.startsWith('Kecamatan ')) {
+          kecamatan = kecamatan.replaceFirst('Kecamatan ', '');
+        }
+      }
+    } catch (e) {
+      // Ignore location errors to not block the upload
+      debugPrint("Gagal mendapatkan lokasi: $e");
+    }
+
+    try {
+      final UploadResult result = await UploadService.uploadImage(
+        widget.imagePath!,
+        provinsi: provinsi,
+        kabupaten: kabupaten,
+        kecamatan: kecamatan,
+      );
       if (!mounted) return;
       setState(() => _isUploading = false);
 
