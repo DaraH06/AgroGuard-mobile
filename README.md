@@ -36,15 +36,21 @@
   - `http` (Komunikasi API)
   - `flutter_dotenv` (Keamanan Endpoint)
 
-## 🚀 Persiapan Menjalankan Projek
+## 📱 Spesifikasi Smartphone yang Direkomendasikan
 
-Ikuti langkah-langkah berikut untuk menjalankan projek di lingkungan lokal Anda:
+Untuk pengalaman terbaik saat menggunakan AgroGuard Mobile di lapangan:
 
-### Prasyarat
+| Komponen        | Minimum             | Rekomendasi               |
+| --------------- | ------------------- | ------------------------- |
+| **OS**          | Android 10.0 (Pie)  | Android 14+ (Q)           |
+| **RAM**         | 4 GB                | 4 GB+                     |
+| **Penyimpanan** | 100 MB ruang kosong | 500 MB+ ruang kosong      |
+| **Kamera**      | 12 MP               | 50 MP+ (dengan autofocus) |
+| **GPS**         | GPS bawaan          | A-GPS / GLONASS           |
+| **Koneksi**     | 4G / Wi-Fi          | 4G+ / 5G / Wi-Fi          |
+| **Prosesor**    | Quad-core 1.4 GHz   | Octa-core 2.0 GHz+        |
 
-- Flutter SDK (^3.10.1 atau versi terbaru)
-- Android Studio / VS Code
-- Akses ke [AgroGuard Backend](https://github.com/Darah0/AgroGuard-mobile) (Laravel)
+> **💡 Tips**: Pastikan fitur **GPS/Lokasi** dan **izin Kamera** diaktifkan di pengaturan smartphone sebelum menggunakan aplikasi.
 
 ## 📱 Screenshots
 
