@@ -59,24 +59,26 @@ Ikuti langkah-langkah berikut untuk menjalankan projek di lingkungan lokal Anda:
 Terima kasih kepada orang-orang hebat ini yang telah berkontribusi:
 
 <!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
-<table>
-  <tr>
-    <td align="center">
-      <a href="https://github.com/Darah06">
-        <img src="https://github.com/Darah06.png?v=4" width="100px;" alt="Darah06"/><br />
-        <sub><b>Darah06</b></sub>
-      </a><br />
-      💻 🎨 📖
-    </td>
-    <td align="center">
-      <a href="https://github.com/inihilmyloh">
-        <img src="https://github.com/inihilmyloh.png?v=4" width="100px;" alt="inihilmyloh"/><br />
-        <sub><b>inihilmyloh</b></sub>
-      </a><br />
-      💻 🎨 📖
-    </td>
-  </tr>
-</table>
+<div align="center">
+  <table>
+    <tr>
+      <td align="center">
+        <a href="https://github.com/Darah06">
+          <img src="https://github.com/Darah06.png?v=4" width="100" style="border-radius: 50%;" alt="Darah06"/><br />
+          <sub><b>Darah06</b></sub>
+        </a><br />
+        💻 🎨 📖
+      </td>
+      <td align="center">
+        <a href="https://github.com/inihilmyloh">
+          <img src="https://github.com/inihilmyloh.png?v=4" width="100" style="border-radius: 50%;" alt="inihilmyloh"/><br />
+          <sub><b>inihilmyloh</b></sub>
+        </a><br />
+        💻 🎨 📖
+      </td>
+    </tr>
+  </table>
+</div>
 
 ## 📄 Lisensi
 
