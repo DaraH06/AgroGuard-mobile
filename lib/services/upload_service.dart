@@ -34,7 +34,7 @@ class UploadService {
 
     try {
       final streamed = await request.send().timeout(
-        const Duration(seconds: 35), // Diperpanjang untuk koneksi lambat
+        const Duration(seconds: 20),
         onTimeout: () => throw TimeoutException(
           'Koneksi internet terlalu lambat. Coba lagi dengan sinyal yang lebih baik.',
         ),
