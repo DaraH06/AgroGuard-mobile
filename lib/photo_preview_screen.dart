@@ -145,17 +145,23 @@ class _PhotoPreviewScreenState extends State<PhotoPreviewScreen> {
             'Tidak ada koneksi internet.\nPeriksa WiFi atau data seluler Anda.';
       }
 
+      // Hapus SnackBar sebelumnya agar tidak menumpuk
+      ScaffoldMessenger.of(context).clearSnackBars();
+
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text(errorMsg),
+          content: Text(
+            errorMsg,
+            style: const TextStyle(fontSize: 14),
+          ),
           backgroundColor: Colors.red.shade400,
           behavior: SnackBarBehavior.floating,
-          duration: const Duration(seconds: 6),
-          action: SnackBarAction(
-            label: 'Coba Lagi',
-            textColor: Colors.white,
-            onPressed: _doUpload, // Tombol Retry
+          margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
           ),
+          duration: const Duration(seconds: 5),
+          dismissDirection: DismissDirection.horizontal,
         ),
       );
     }
