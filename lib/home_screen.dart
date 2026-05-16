@@ -46,7 +46,9 @@ class _HomeScreenState extends State<HomeScreen> {
       barrierDismissible: false,
       builder: (dialogContext) => StatefulBuilder(
         builder: (dialogContext, setDialogState) => AlertDialog(
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20),
+          ),
           backgroundColor: Colors.white,
           titlePadding: const EdgeInsets.fromLTRB(24, 24, 24, 0),
           contentPadding: const EdgeInsets.fromLTRB(24, 16, 24, 0),
@@ -108,10 +110,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     const SizedBox(width: 8),
                     const Text(
                       'Jangan ingatkan lagi',
-                      style: TextStyle(
-                        fontSize: 13,
-                        color: Color(0xFF888888),
-                      ),
+                      style: TextStyle(fontSize: 13, color: Color(0xFF888888)),
                     ),
                   ],
                 ),
@@ -182,7 +181,11 @@ class _HomeScreenState extends State<HomeScreen> {
                 color: Colors.red.shade50,
                 borderRadius: BorderRadius.circular(10),
               ),
-              child: Icon(Icons.location_off, color: Colors.red.shade400, size: 24),
+              child: Icon(
+                Icons.location_off,
+                color: Colors.red.shade400,
+                size: 24,
+              ),
             ),
             const SizedBox(width: 12),
             const Text(
@@ -197,11 +200,7 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
         content: const Text(
           'Mohon aktifkan lokasi Anda terlebih dahulu. Lokasi diperlukan untuk mencatat posisi pengambilan foto tanaman.',
-          style: TextStyle(
-            fontSize: 14,
-            color: Color(0xFF666666),
-            height: 1.5,
-          ),
+          style: TextStyle(fontSize: 14, color: Color(0xFF666666), height: 1.5),
         ),
         actions: [
           Row(
@@ -233,7 +232,11 @@ class _HomeScreenState extends State<HomeScreen> {
                     Navigator.pop(context);
                     Geolocator.openLocationSettings();
                   },
-                  icon: const Icon(Icons.settings, color: Colors.white, size: 18),
+                  icon: const Icon(
+                    Icons.settings,
+                    color: Colors.white,
+                    size: 18,
+                  ),
                   label: const Text(
                     'Aktifkan',
                     style: TextStyle(
@@ -265,7 +268,7 @@ class _HomeScreenState extends State<HomeScreen> {
     if (!mounted) return;
 
     if (!scanActive) {
-      // Reset state dan paksa recreate widget di belakang layar 
+      // Reset state dan paksa recreate widget di belakang layar
       // SEBELUM navigasi agar tidak ada flicker/refresh animasi saat kembali
       setState(() {
         isScanActive = true;
@@ -293,16 +296,14 @@ class _HomeScreenState extends State<HomeScreen> {
       desiredAccuracy: LocationAccuracy.high,
     );
 
-    // Ambil foto/pilih dari galeri
+    // Ambil foto/pilih dari galeri (kualitas penuh, compress nanti sekali saja)
     final XFile? photo = await picker.pickImage(
       source: source,
-      imageQuality: 75,
-      maxWidth: 1024,
-      maxHeight: 1024,
+      maxWidth: 1920,
+      maxHeight: 1920,
     );
 
     if (photo != null) {
-      // Kompresi foto
       final filePath = photo.path;
       final lastIndex = filePath.lastIndexOf(RegExp(r'.jp'));
       final splitted = filePath.substring(0, lastIndex);
@@ -311,9 +312,9 @@ class _HomeScreenState extends State<HomeScreen> {
       var result = await FlutterImageCompress.compressAndGetFile(
         photo.path,
         outPath,
-        quality: 70,
-        minWidth: 1024,
-        minHeight: 1024,
+        quality: 85,
+        minWidth: 1280,
+        minHeight: 1280,
       );
 
       if (!mounted) return;
