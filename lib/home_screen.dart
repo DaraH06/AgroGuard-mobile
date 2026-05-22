@@ -1,4 +1,7 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'utils/image_format_helper.dart';
 import 'widgets/agroguard_header.dart';
 import 'widgets/animated_bottom_toggle.dart';
 import 'widgets/agro_info_banner.dart';
@@ -287,6 +290,25 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
+  void _showPngFormatWarning() {
+    if (!mounted) return;
+    ScaffoldMessenger.of(context).clearSnackBars();
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: const Text(
+          kPngNotSupportedMessage,
+          style: TextStyle(fontSize: 14),
+        ),
+        backgroundColor: Colors.orange.shade700,
+        behavior: SnackBarBehavior.floating,
+        margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        duration: const Duration(seconds: 5),
+        dismissDirection: DismissDirection.horizontal,
+      ),
+    );
+  }
+
   // Fungsi untuk menangani pengambilan gambar dari sumber tertentu
   Future<void> _pickImage(ImageSource source) async {
     final ImagePicker picker = ImagePicker();
@@ -304,10 +326,17 @@ class _HomeScreenState extends State<HomeScreen> {
     );
 
     if (photo != null) {
+      if (isPngImage(path: photo.path, mimeType: photo.mimeType)) {
+        _showPngFormatWarning();
+        return;
+      }
+
       final filePath = photo.path;
-      final lastIndex = filePath.lastIndexOf(RegExp(r'.jp'));
-      final splitted = filePath.substring(0, lastIndex);
-      final outPath = '${splitted}_compressed.jpg';
+      final name = filePath.split(Platform.pathSeparator).last;
+      final dot = name.lastIndexOf('.');
+      final base = dot > 0 ? name.substring(0, dot) : name;
+      final dir = filePath.substring(0, filePath.length - name.length);
+      final outPath = '$dir${base}_compressed.jpg';
 
       var result = await FlutterImageCompress.compressAndGetFile(
         photo.path,
@@ -329,6 +358,8 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ),
         );
+      } else if (isPngImage(path: photo.path, mimeType: photo.mimeType)) {
+        _showPngFormatWarning();
       }
     }
   }
