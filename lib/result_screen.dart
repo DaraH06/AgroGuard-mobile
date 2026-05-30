@@ -62,8 +62,12 @@ class _ResultScreenState extends State<ResultScreen> {
   /// Ambil angka persentase dari string seperti "60.00%"
   String _formatPercent(String raw) {
     final cleaned = raw.replaceAll('%', '').trim();
-    final value = double.tryParse(cleaned);
+    var value = double.tryParse(cleaned);
     if (value == null) return raw;
+    if (value <= 1.0) {
+      value = value * 100;
+    }
+
     return '${value.toStringAsFixed(0)}%';
   }
 
@@ -119,8 +123,7 @@ class _ResultScreenState extends State<ResultScreen> {
               ? Image.file(
                   File(widget.imagePath!),
                   fit: BoxFit.cover,
-                  errorBuilder: (_, __, ___) =>
-                      _buildPlaceholderPhoto(),
+                  errorBuilder: (_, __, ___) => _buildPlaceholderPhoto(),
                 )
               : _buildPlaceholderPhoto(),
         ),
@@ -136,16 +139,11 @@ class _ResultScreenState extends State<ResultScreen> {
             gradient: LinearGradient(
               begin: Alignment.topCenter,
               end: Alignment.bottomCenter,
-              colors: [
-                Colors.green.shade400,
-                Colors.green.shade700,
-              ],
+              colors: [Colors.green.shade400, Colors.green.shade700],
             ),
           ),
         ),
-        const Center(
-          child: Icon(Icons.grass, size: 80, color: Colors.white54),
-        ),
+        const Center(child: Icon(Icons.grass, size: 80, color: Colors.white54)),
       ],
     );
   }
@@ -296,17 +294,15 @@ class _ResultScreenState extends State<ResultScreen> {
                         label,
                         style: TextStyle(
                           fontSize: 13,
-                          fontWeight:
-                              isTop ? FontWeight.w600 : FontWeight.w400,
+                          fontWeight: isTop ? FontWeight.w600 : FontWeight.w400,
                           color: isTop ? primaryGreen : Colors.grey.shade700,
                         ),
                       ),
                       Text(
-                        entry.value,
+                        _formatPercent(entry.value),
                         style: TextStyle(
                           fontSize: 13,
-                          fontWeight:
-                              isTop ? FontWeight.w600 : FontWeight.w400,
+                          fontWeight: isTop ? FontWeight.w600 : FontWeight.w400,
                           color: isTop ? primaryGreen : Colors.grey.shade600,
                         ),
                       ),
@@ -316,7 +312,7 @@ class _ResultScreenState extends State<ResultScreen> {
                   ClipRRect(
                     borderRadius: BorderRadius.circular(4),
                     child: LinearProgressIndicator(
-                      value: value / 100,
+                      value: value <= 1.0 ? value : value / 100,
                       minHeight: 8,
                       backgroundColor: Colors.grey.shade200,
                       valueColor: AlwaysStoppedAnimation<Color>(
