@@ -9,7 +9,7 @@ import '../models/upload_result.dart';
 class UploadService {
   static final String _host =
       '${dotenv.env['IP_ADDRESS']}:${dotenv.env['PORT']}';
-  static final String _baseUrl = 'http://$_host/api';
+  static final String _baseUrl = 'http://agroguard-admin.my.id/api';
 
   /// Upload gambar ke Laravel POST /api/upload
   static Future<UploadResult> uploadImage(

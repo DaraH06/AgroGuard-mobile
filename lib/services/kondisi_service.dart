@@ -5,7 +5,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 class KondisiService {
   static final String _host =
       '${dotenv.env['IP_ADDRESS']}:${dotenv.env['PORT']}';
-  static final String _baseUrl = 'http://$_host/api';
+  static final String _baseUrl = 'http://agroguard-admin.my.id/api';
 
   /// Ambil data kondisi penyakit dari Laravel GET /api/kondisi
   /// Jika [kabupaten] diisi, data akan difilter hanya untuk kabupaten tersebut.
